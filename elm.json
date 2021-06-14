@@ -1,9 +1,9 @@
 {
     "type": "package",
-    "name": "Orasund/elm-ui-widgets",
-    "summary": "Collection of reusable views for elm-ui.",
+    "name": "orus-io/elm-ui-widgets-with-context",
+    "summary": "A elm-ui-widgets friendly fork based on elm-ui-with-context.",
     "license": "BSD-3-Clause",
-    "version": "3.1.0",
+    "version": "1.0.0",
     "exposed-modules": [
         "Widget",
         "Widget.Material",
