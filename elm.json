@@ -23,6 +23,7 @@
         "elm/svg": "1.0.1 <= v < 2.0.0",
         "elm-community/intdict": "3.0.0 <= v < 4.0.0",
         "mdgriffith/elm-ui": "1.1.7 <= v < 2.0.0",
+        "miniBill/elm-ui-with-context": "1.1.0 <= v < 2.0.0",
         "noahzgordon/elm-color-extra": "1.0.2 <= v < 2.0.0",
         "turboMaCk/queue": "1.0.2 <= v < 2.0.0"
     },
