@@ -10,8 +10,9 @@ module Internal.SortTable exposing
     , unsortableColumn
     )
 
-import Element exposing (Attribute, Element, Length)
+import Element.WithContext as Element exposing (Length)
 import Internal.Button as Button exposing (ButtonStyle)
+import Internal.Context exposing (Attribute, Element)
 import Widget.Icon exposing (Icon)
 
 
@@ -21,13 +22,13 @@ import Widget.Icon exposing (Icon)
     To avoid that, make sure to wrap them in `Element.html >> Element.el []`
 
 -}
-type alias SortTableStyle msg =
-    { elementTable : List (Attribute msg)
+type alias SortTableStyle context theme msg =
+    { elementTable : List (Attribute context theme msg)
     , content :
-        { header : ButtonStyle msg
-        , ascIcon : Icon msg
-        , descIcon : Icon msg
-        , defaultIcon : Icon msg
+        { header : ButtonStyle context theme msg
+        , ascIcon : Icon context theme msg
+        , descIcon : Icon context theme msg
+        , defaultIcon : Icon context theme msg
         }
     }
 
@@ -105,9 +106,9 @@ stringColumn { title, value, toString, width } =
 {-| The View
 -}
 sortTable :
-    SortTableStyle msg
+    SortTableStyle context theme msg
     -> SortTable a msg
-    -> Element msg
+    -> Element context theme msg
 sortTable style model =
     let
         findTitle : List (Column a) -> Maybe (ColumnType a)

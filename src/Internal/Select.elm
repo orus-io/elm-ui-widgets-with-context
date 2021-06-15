@@ -1,39 +1,40 @@
 module Internal.Select exposing (MultiSelect, Select, multiSelect, select, selectButton, toggleButton)
 
-import Element exposing (Element)
-import Element.Input as Input
-import Element.Region as Region
+import Element.WithContext as Element
+import Element.WithContext.Input as Input
+import Element.WithContext.Region as Region
 import Internal.Button exposing (Button, ButtonStyle)
+import Internal.Context exposing (Element)
 import Set exposing (Set)
 import Widget.Icon exposing (Icon)
 
 
-type alias Select msg =
+type alias Select context theme msg =
     { selected : Maybe Int
     , options :
         List
             { text : String
-            , icon : Icon msg
+            , icon : Icon context theme msg
             }
     , onSelect : Int -> Maybe msg
     }
 
 
-type alias MultiSelect msg =
+type alias MultiSelect context theme msg =
     { selected : Set Int
     , options :
         List
             { text : String
-            , icon : Icon msg
+            , icon : Icon context theme msg
             }
     , onSelect : Int -> Maybe msg
     }
 
 
 selectButton :
-    ButtonStyle msg
-    -> ( Bool, Button msg )
-    -> Element msg
+    ButtonStyle context theme msg
+    -> ( Bool, Button context theme msg )
+    -> Element context theme msg
 selectButton style ( selected, b ) =
     Input.button
         (style.elementButton
@@ -67,9 +68,9 @@ selectButton style ( selected, b ) =
 
 
 toggleButton :
-    ButtonStyle msg
-    -> ( Bool, Button msg )
-    -> Element msg
+    ButtonStyle context theme msg
+    -> ( Bool, Button context theme msg )
+    -> Element context theme msg
 toggleButton style ( selected, b ) =
     Input.button
         (style.elementButton
@@ -101,8 +102,8 @@ toggleButton style ( selected, b ) =
 
 
 select :
-    Select msg
-    -> List ( Bool, Button msg )
+    Select context theme msg
+    -> List ( Bool, Button context theme msg )
 select { selected, options, onSelect } =
     options
         |> List.indexedMap
@@ -117,8 +118,8 @@ select { selected, options, onSelect } =
 
 
 multiSelect :
-    MultiSelect msg
-    -> List ( Bool, Button msg )
+    MultiSelect context theme msg
+    -> List ( Bool, Button context theme msg )
 multiSelect { selected, options, onSelect } =
     options
         |> List.indexedMap

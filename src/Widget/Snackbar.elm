@@ -19,19 +19,20 @@ A [snackbar](https://material.io/components/snackbars/) shows notification, one 
 
 -}
 
-import Element exposing (Attribute, Element)
+import Element.WithContext as Element
 import Internal.Button as Button exposing (ButtonStyle, TextButton)
+import Internal.Context exposing (Attribute, Element)
 import Queue exposing (Queue)
 
 
 {-| -}
-type alias SnackbarStyle msg =
-    { elementRow : List (Attribute msg)
+type alias SnackbarStyle context theme msg =
+    { elementRow : List (Attribute context theme msg)
     , content :
         { text :
-            { elementText : List (Attribute msg)
+            { elementText : List (Attribute context theme msg)
             }
-        , button : ButtonStyle msg
+        , button : ButtonStyle context theme msg
         }
     }
 
@@ -121,10 +122,10 @@ current model =
 {-| Views the current Message. (only one at a time)
 -}
 view :
-    SnackbarStyle msg
+    SnackbarStyle context theme msg
     -> (a -> Message msg)
     -> Snackbar a
-    -> Maybe (Element msg)
+    -> Maybe (Element context theme msg)
 view style toMessage model =
     model
         |> current

@@ -1,18 +1,19 @@
 module Internal.Material.Button exposing (baseButton, containedButton, iconButton, outlinedButton, textButton, toggleButton)
 
-import Element
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
+import Element.WithContext.Font as Font
 import Html.Attributes as Attributes
 import Internal.Button exposing (ButtonStyle)
+import Internal.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 import Widget.Material.Typography as Typography
 
 
-baseButton : Palette -> ButtonStyle msg
-baseButton palette =
+baseButton : ButtonStyle context Palette msg
+baseButton =
     { elementButton =
         Typography.button
             ++ [ Element.height <| Element.px 36
@@ -35,15 +36,15 @@ baseButton palette =
             , icon =
                 { ifDisabled =
                     { size = 18
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 , ifActive =
                     { size = 18
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 }
             }
@@ -53,87 +54,105 @@ baseButton palette =
 
 {-| A contained button representing the most important action of a group.
 -}
-containedButton : Palette -> ButtonStyle msg
-containedButton palette =
+containedButton : ButtonStyle context Palette msg
+containedButton =
     { elementButton =
-        (baseButton palette |> .elementButton)
+        (baseButton |> .elementButton)
             ++ [ Border.shadow <| MaterialColor.shadow 2
                , Element.mouseDown <|
-                    [ palette.primary
-                        |> MaterialColor.withShade palette.on.primary MaterialColor.buttonPressedOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Element.withDecoration
+                        (\{ theme } ->
+                            theme.primary
+                                |> MaterialColor.withShade theme.on.primary MaterialColor.buttonPressedOpacity
+                                |> MaterialColor.fromColor
+                        )
+                        Background.color
                     , Border.shadow <| MaterialColor.shadow 12
                     ]
                , Element.focused <|
-                    [ palette.primary
-                        |> MaterialColor.withShade palette.on.primary MaterialColor.buttonFocusOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Element.withDecoration
+                        (\{ theme } ->
+                            theme.primary
+                                |> MaterialColor.withShade theme.on.primary MaterialColor.buttonFocusOpacity
+                                |> MaterialColor.fromColor
+                        )
+                        Background.color
                     , Border.shadow <| MaterialColor.shadow 6
                     ]
                , Element.mouseOver <|
-                    [ palette.primary
-                        |> MaterialColor.withShade palette.on.primary MaterialColor.buttonHoverOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Element.withDecoration
+                        (\{ theme } ->
+                            theme.primary
+                                |> MaterialColor.withShade theme.on.primary MaterialColor.buttonHoverOpacity
+                                |> MaterialColor.fromColor
+                        )
+                        Background.color
                     , Border.shadow <| MaterialColor.shadow 6
                     ]
                ]
     , ifDisabled =
-        (baseButton palette |> .ifDisabled)
-            ++ [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonDisabledOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
-               , Font.color <| MaterialColor.fromColor <| Palette.gray palette
+        (baseButton |> .ifDisabled)
+            ++ [ Background.color
+                    |> withPaletteAttribute
+                        (Palette.gray
+                            >> MaterialColor.scaleOpacity MaterialColor.buttonDisabledOpacity
+                            >> MaterialColor.fromColor
+                        )
+               , Font.color
+                    |> withPaletteAttribute
+                        (Palette.gray >> MaterialColor.fromColor)
                , Border.shadow <| MaterialColor.shadow 0
                , Element.mouseDown []
                , Element.mouseOver []
                , Element.focused []
                ]
     , ifActive =
-        [ palette.primary
-            |> MaterialColor.withShade palette.on.primary MaterialColor.buttonHoverOpacity
-            |> MaterialColor.fromColor
-            |> Background.color
-        , palette.primary
-            |> MaterialColor.accessibleTextColor
-            |> MaterialColor.fromColor
-            |> Font.color
+        [ Background.color
+            |> withPaletteAttribute
+                (\palette ->
+                    palette.primary
+                        |> MaterialColor.withShade palette.on.primary MaterialColor.buttonHoverOpacity
+                        |> MaterialColor.fromColor
+                )
+        , Font.color
+            |> withPrimaryAttribute
+                (MaterialColor.accessibleTextColor
+                    >> MaterialColor.fromColor
+                )
         ]
     , otherwise =
-        [ palette.primary
-            |> MaterialColor.fromColor
-            |> Background.color
-        , palette.primary
-            |> MaterialColor.accessibleTextColor
-            |> MaterialColor.fromColor
-            |> Font.color
+        [ Background.color
+            |> withPrimaryAttribute
+                MaterialColor.fromColor
+        , Font.color
+            |> withPrimaryAttribute
+                (MaterialColor.accessibleTextColor
+                    >> MaterialColor.fromColor
+                )
         ]
     , content =
         { elementRow =
-            (baseButton palette |> .content |> .elementRow)
+            (baseButton |> .content |> .elementRow)
                 ++ [ Element.paddingXY 8 0 ]
         , content =
-            { text = { contentText = baseButton palette |> (\b -> b.content.content.text.contentText) }
+            { text = { contentText = baseButton |> (\b -> b.content.content.text.contentText) }
             , icon =
                 { ifActive =
                     { size = 18
                     , color =
-                        palette.primary
-                            |> MaterialColor.accessibleTextColor
+                        .primary
+                            >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 18
                     , color =
-                        Palette.gray palette
+                        Palette.gray
                     }
                 , otherwise =
                     { size = 18
                     , color =
-                        palette.primary
-                            |> MaterialColor.accessibleTextColor
+                        .primary
+                            >> MaterialColor.accessibleTextColor
                     }
                 }
             }
@@ -143,56 +162,76 @@ containedButton palette =
 
 {-| A outlined button representing an important action within a group.
 -}
-outlinedButton : Palette -> ButtonStyle msg
-outlinedButton palette =
+outlinedButton : ButtonStyle context Palette msg
+outlinedButton =
     { elementButton =
-        (baseButton palette |> .elementButton)
+        (baseButton |> .elementButton)
             ++ [ Border.width <| 1
-               , Font.color <| MaterialColor.fromColor <| palette.primary
-               , palette.on.surface
-                    |> MaterialColor.scaleOpacity 0.14
-                    |> MaterialColor.withShade palette.primary MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Border.color
+               , Font.color
+                    |> Element.withAttribute
+                        (\{ theme } ->
+                            theme.primary
+                                |> MaterialColor.fromColor
+                        )
+               , Border.color
+                    |> Element.withAttribute
+                        (\{ theme } ->
+                            theme.on.surface
+                                |> MaterialColor.scaleOpacity 0.14
+                                |> MaterialColor.withShade theme.primary MaterialColor.buttonHoverOpacity
+                                |> MaterialColor.fromColor
+                        )
                , Element.mouseDown
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Background.color
+                        |> Element.withDecoration
+                            (\{ theme } ->
+                                theme.primary
+                                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                , Element.focused
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Background.color
+                        |> Element.withDecoration
+                            (\{ theme } ->
+                                theme.primary
+                                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                , Element.mouseOver
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Background.color
+                        |> Element.withDecoration
+                            (\{ theme } ->
+                                theme.primary
+                                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                ]
     , ifDisabled =
-        (baseButton palette |> .ifDisabled)
-            ++ [ Palette.gray palette
-                    |> MaterialColor.fromColor
-                    |> Font.color
+        (baseButton |> .ifDisabled)
+            ++ [ Font.color
+                    |> withPaletteAttribute
+                        (Palette.gray
+                            >> MaterialColor.fromColor
+                        )
                , Element.mouseDown []
                , Element.mouseOver []
                , Element.focused []
                ]
     , ifActive =
-        [ palette.primary
-            |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-            |> MaterialColor.fromColor
-            |> Background.color
+        [ Background.color
+            |> withPrimaryAttribute
+                (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                    >> MaterialColor.fromColor
+                )
         ]
     , otherwise =
         []
     , content =
         { elementRow =
-            (baseButton palette
+            (baseButton
                 |> .content
                 |> .elementRow
             )
@@ -200,7 +239,7 @@ outlinedButton palette =
         , content =
             { text =
                 { contentText =
-                    baseButton palette
+                    baseButton
                         |> .content
                         |> .content
                         |> .text
@@ -209,15 +248,15 @@ outlinedButton palette =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = palette.primary
+                    , color = .primary
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = palette.primary
+                    , color = .primary
                     }
                 }
             }
@@ -227,63 +266,77 @@ outlinedButton palette =
 
 {-| A text button representing a simple action within a group.
 -}
-textButton : Palette -> ButtonStyle msg
-textButton palette =
+textButton : ButtonStyle context Palette msg
+textButton =
     { elementButton =
-        (baseButton palette |> .elementButton)
-            ++ [ Font.color <| MaterialColor.fromColor <| palette.primary
+        (baseButton |> .elementButton)
+            ++ [ Font.color
+                    |> withPrimaryAttribute
+                        MaterialColor.fromColor
                , Element.mouseDown
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Background.color
+                        |> Element.withDecoration
+                            (\{ theme } ->
+                                theme.primary
+                                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                , Element.focused
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Background.color
+                        |> Element.withDecoration
+                            (\{ theme } ->
+                                theme.primary
+                                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                , Element.mouseOver
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ Background.color
+                        |> Element.withDecoration
+                            (\{ theme } ->
+                                theme.primary
+                                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                ]
     , ifDisabled =
-        (baseButton palette |> .ifDisabled)
-            ++ [ Palette.gray palette
-                    |> MaterialColor.fromColor
-                    |> Font.color
+        (baseButton |> .ifDisabled)
+            ++ [ Font.color
+                    |> withPaletteAttribute
+                        (Palette.gray
+                            >> MaterialColor.fromColor
+                        )
                , Element.mouseDown []
                , Element.mouseOver []
                , Element.focused []
                ]
     , ifActive =
-        [ palette.primary
-            |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-            |> MaterialColor.fromColor
-            |> Background.color
+        [ Background.color
+            |> withPrimaryAttribute
+                (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                    >> MaterialColor.fromColor
+                )
         ]
     , otherwise =
         []
     , content =
-        { elementRow = baseButton palette |> (\b -> b.content.elementRow)
+        { elementRow = baseButton |> (\b -> b.content.elementRow)
         , content =
-            { text = { contentText = baseButton palette |> (\b -> b.content.content.text.contentText) }
+            { text = { contentText = baseButton |> (\b -> b.content.content.text.contentText) }
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = palette.primary
+                    , color = .primary
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = palette.primary
+                    , color = .primary
                     }
                 }
             }
@@ -302,8 +355,8 @@ Technical Remark:
     I noticed the gray version was used more often, so i went with that one.
 
 -}
-toggleButton : Palette -> ButtonStyle msg
-toggleButton palette =
+toggleButton : ButtonStyle context Palette msg
+toggleButton =
     { elementButton =
         Typography.button
             ++ [ Element.width <| Element.px 48
@@ -311,72 +364,95 @@ toggleButton palette =
                , Element.padding 4
                , Border.width <| 1
                , Element.mouseDown <|
-                    [ palette.surface
-                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonPressedOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
-                    , palette.on.surface
-                        |> MaterialColor.scaleOpacity 0.14
-                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonPressedOpacity
-                        |> MaterialColor.fromColor
-                        |> Border.color
+                    [ Background.color
+                        |> withPaletteDecoration
+                            (\palette ->
+                                palette.surface
+                                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonPressedOpacity
+                                    |> MaterialColor.fromColor
+                            )
+                    , Border.color
+                        |> withPaletteDecoration
+                            (\palette ->
+                                palette.on.surface
+                                    |> MaterialColor.scaleOpacity 0.14
+                                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonPressedOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                , Element.focused []
                , Element.mouseOver <|
-                    [ palette.surface
-                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
-                    , palette.on.surface
-                        |> MaterialColor.scaleOpacity 0.14
-                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
-                        |> MaterialColor.fromColor
-                        |> Border.color
+                    [ Background.color
+                        |> withPaletteDecoration
+                            (\palette ->
+                                palette.surface
+                                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
+                                    |> MaterialColor.fromColor
+                            )
+                    , Border.color
+                        |> withPaletteDecoration
+                            (\palette ->
+                                palette.on.surface
+                                    |> MaterialColor.scaleOpacity 0.14
+                                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
+                                    |> MaterialColor.fromColor
+                            )
                     ]
                ]
     , ifDisabled =
-        (baseButton palette |> .ifDisabled)
-            ++ [ palette.surface
-                    |> MaterialColor.fromColor
-                    |> Background.color
-               , palette.on.surface
-                    |> MaterialColor.scaleOpacity 0.14
-                    |> MaterialColor.fromColor
-                    |> Border.color
-               , Palette.gray palette
-                    |> MaterialColor.fromColor
-                    |> Font.color
+        (baseButton |> .ifDisabled)
+            ++ [ Background.color
+                    |> withSurfaceAttribute MaterialColor.fromColor
+               , Border.color
+                    |> withOnSurfaceAttribute
+                        (MaterialColor.scaleOpacity 0.14
+                            >> MaterialColor.fromColor
+                        )
+               , withPaletteAttribute
+                    (Palette.gray
+                        >> MaterialColor.fromColor
+                    )
+                    Font.color
                , Element.mouseDown []
                , Element.mouseOver []
                ]
     , ifActive =
-        [ palette.surface
-            |> MaterialColor.withShade palette.on.surface MaterialColor.buttonSelectedOpacity
-            |> MaterialColor.fromColor
-            |> Background.color
-        , palette.surface
-            |> MaterialColor.accessibleTextColor
-            |> MaterialColor.fromColor
-            |> Font.color
-        , palette.on.surface
-            |> MaterialColor.scaleOpacity 0.14
-            |> MaterialColor.withShade palette.on.surface MaterialColor.buttonSelectedOpacity
-            |> MaterialColor.fromColor
-            |> Border.color
+        [ Background.color
+            |> withPaletteAttribute
+                (\palette ->
+                    palette.surface
+                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonSelectedOpacity
+                        |> MaterialColor.fromColor
+                )
+        , Font.color
+            |> withSurfaceAttribute
+                (MaterialColor.accessibleTextColor
+                    >> MaterialColor.fromColor
+                )
+        , Border.color
+            |> withPaletteAttribute
+                (\palette ->
+                    palette.on.surface
+                        |> MaterialColor.scaleOpacity 0.14
+                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonSelectedOpacity
+                        |> MaterialColor.fromColor
+                )
         , Element.mouseOver []
         ]
     , otherwise =
-        [ palette.surface
-            |> MaterialColor.fromColor
-            |> Background.color
-        , palette.surface
-            |> MaterialColor.accessibleTextColor
-            |> MaterialColor.fromColor
-            |> Font.color
-        , palette.on.surface
-            |> MaterialColor.scaleOpacity 0.14
-            |> MaterialColor.fromColor
-            |> Border.color
+        [ Background.color
+            |> withSurfaceAttribute
+                MaterialColor.fromColor
+        , Font.color
+            |> withSurfaceAttribute
+                (MaterialColor.accessibleTextColor
+                    >> MaterialColor.fromColor
+                )
+        , Border.color
+            |> withOnSurfaceAttribute
+                (MaterialColor.scaleOpacity 0.14
+                    >> MaterialColor.fromColor
+                )
         ]
     , content =
         { elementRow =
@@ -386,10 +462,11 @@ toggleButton palette =
             , Border.rounded 24
             , Element.padding 8
             , Element.focused <|
-                (palette.surface
-                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonFocusOpacity
-                    |> MaterialColor.textAndBackground
-                )
+                MaterialColor.textAndBackgroundDecoration
+                    (\{ theme } ->
+                        theme.surface
+                            |> MaterialColor.withShade theme.on.surface MaterialColor.buttonFocusOpacity
+                    )
             ]
         , content =
             { text = { contentText = [ Element.centerX ] }
@@ -397,18 +474,18 @@ toggleButton palette =
                 { ifActive =
                     { size = 24
                     , color =
-                        palette.surface
-                            |> MaterialColor.accessibleTextColor
+                        .surface
+                            >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 24
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 , otherwise =
                     { size = 24
                     , color =
-                        palette.surface
-                            |> MaterialColor.accessibleTextColor
+                        .surface
+                            >> MaterialColor.accessibleTextColor
                     }
                 }
             }
@@ -423,46 +500,52 @@ Technical Remark:
   - Could not find any specification details
 
 -}
-iconButton : Palette -> ButtonStyle msg
-iconButton palette =
+iconButton : ButtonStyle context Palette msg
+iconButton =
     { elementButton =
-        (baseButton palette |> .elementButton)
+        (baseButton |> .elementButton)
             ++ [ Element.height <| Element.px 48
                , Element.width <| Element.minimum 48 <| Element.shrink
                , Border.rounded 24
                , Element.mouseDown
-                    [ palette.surface
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ withSurfaceDecoration
+                        (MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                            >> MaterialColor.fromColor
+                        )
+                        Background.color
                     ]
                , Element.focused
-                    [ palette.surface
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ withSurfaceDecoration
+                        (MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                            >> MaterialColor.fromColor
+                        )
+                        Background.color
                     ]
                , Element.mouseOver
-                    [ palette.surface
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ withSurfaceDecoration
+                        (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                            >> MaterialColor.fromColor
+                        )
+                        Background.color
                     ]
                ]
     , ifDisabled =
-        (baseButton palette |> .ifDisabled)
-            ++ [ Palette.gray palette
-                    |> MaterialColor.fromColor
-                    |> Font.color
+        (baseButton |> .ifDisabled)
+            ++ [ withPaletteAttribute
+                    (Palette.gray
+                        >> MaterialColor.fromColor
+                    )
+                    Font.color
                , Element.mouseDown []
                , Element.mouseOver []
                , Element.focused []
                ]
     , ifActive =
-        [ palette.surface
-            |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-            |> MaterialColor.fromColor
-            |> Background.color
+        [ withSurfaceAttribute
+            (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                >> MaterialColor.fromColor
+            )
+            Background.color
         ]
     , otherwise =
         []
@@ -478,15 +561,15 @@ iconButton palette =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = palette.primary
+                    , color = .primary
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = palette.primary
+                    , color = .primary
                     }
                 }
             }

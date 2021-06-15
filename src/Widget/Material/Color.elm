@@ -3,7 +3,7 @@ module Widget.Material.Color exposing
     , accessibleTextColor, accessibleWithTextColor
     , withShade, scaleOpacity
     , dark
-    , toCIELCH, fromCIELCH, shadow, fromColor, textAndBackground
+    , toCIELCH, fromCIELCH, shadow, fromColor, textAndBackground, textAndBackgroundDecoration
     , gray
     )
 
@@ -39,7 +39,7 @@ then the javascript material design implementation.
 
 ## Utility Functions
 
-@docs toCIELCH, fromCIELCH, shadow, fromColor, textAndBackground
+@docs toCIELCH, fromCIELCH, shadow, fromColor, textAndBackground, textAndBackgroundDecoration
 
 
 ## DEPRECATED
@@ -51,9 +51,9 @@ then the javascript material design implementation.
 import Color exposing (Color)
 import Color.Accessibility as Accessibility
 import Color.Convert as Convert
-import Element
-import Element.Background as Background
-import Element.Font as Font
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Font as Font
 
 
 {-| Opacity value for hovering over a button
@@ -284,13 +284,33 @@ fromColor =
 
 {-| applies a color the background and ensures that the font color is accessible.
 -}
-textAndBackground : Color -> List (Element.Attr decorative msg)
+textAndBackground : (context -> Color) -> List (Element.Attribute context msg)
 textAndBackground color =
-    [ color
-        |> fromColor
-        |> Background.color
-    , color
-        |> accessibleTextColor
-        |> fromColor
-        |> Font.color
+    [ Background.color
+        |> Element.withAttribute
+            (color
+                >> fromColor
+            )
+    , Font.color
+        |> Element.withAttribute
+            (color
+                >> accessibleTextColor
+                >> fromColor
+            )
+    ]
+
+
+textAndBackgroundDecoration : (context -> Color) -> List (Element.Decoration context)
+textAndBackgroundDecoration color =
+    [ Background.color
+        |> Element.withDecoration
+            (color
+                >> fromColor
+            )
+    , Font.color
+        |> Element.withDecoration
+            (color
+                >> accessibleTextColor
+                >> fromColor
+            )
     ]

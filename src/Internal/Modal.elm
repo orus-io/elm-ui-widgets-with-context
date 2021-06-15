@@ -1,17 +1,18 @@
 module Internal.Modal exposing (Modal, multiModal, singleModal)
 
-import Element exposing (Attribute, Element)
-import Element.Background as Background
-import Element.Events as Events
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Events as Events
+import Internal.Context exposing (Attribute, Element)
 
 
-type alias Modal msg =
+type alias Modal context theme msg =
     { onDismiss : Maybe msg
-    , content : Element msg
+    , content : Element context theme msg
     }
 
 
-background : Maybe msg -> List (Attribute msg)
+background : Maybe msg -> List (Attribute context theme msg)
 background onDismiss =
     [ Element.none
         |> Element.el
@@ -29,7 +30,7 @@ background onDismiss =
     ]
 
 
-singleModal : List (Modal msg) -> List (Attribute msg)
+singleModal : List (Modal context theme msg) -> List (Attribute context theme msg)
 singleModal =
     List.head
         >> Maybe.map
@@ -39,7 +40,7 @@ singleModal =
         >> Maybe.withDefault []
 
 
-multiModal : List (Modal msg) -> List (Attribute msg)
+multiModal : List (Modal context theme msg) -> List (Attribute context theme msg)
 multiModal list =
     case list of
         head :: tail ->

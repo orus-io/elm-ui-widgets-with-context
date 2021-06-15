@@ -1,17 +1,19 @@
 module Internal.Material.Chip exposing (chip)
 
-import Element
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
+import Element.WithContext.Font as Font
 import Internal.Button exposing (ButtonStyle)
+import Internal.Context exposing (Context)
 import Internal.Material.Button as Button
+import Internal.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 
 
-chip : Palette -> ButtonStyle msg
-chip palette =
+chip : ButtonStyle context Theme msg
+chip =
     { elementButton =
         [ Element.height <| Element.px 32
         , Element.paddingEach
@@ -22,61 +24,72 @@ chip palette =
             }
         , Border.rounded <| 16
         , Element.mouseDown <|
-            [ palette
-                |> Palette.lightGray
-                |> MaterialColor.withShade palette.on.surface MaterialColor.buttonPressedOpacity
-                |> MaterialColor.fromColor
-                |> Background.color
+            [ withPaletteDecoration
+                (\palette ->
+                    Palette.lightGray palette
+                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonPressedOpacity
+                        |> MaterialColor.fromColor
+                )
+                Background.color
             ]
         , Element.focused <|
-            [ palette
-                |> Palette.lightGray
-                |> MaterialColor.withShade palette.on.surface MaterialColor.buttonFocusOpacity
-                |> MaterialColor.fromColor
-                |> Background.color
+            [ withPaletteDecoration
+                (\palette ->
+                    Palette.lightGray palette
+                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonFocusOpacity
+                        |> MaterialColor.fromColor
+                )
+                Background.color
             ]
         , Element.mouseOver <|
-            [ palette
-                |> Palette.lightGray
-                |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
-                |> MaterialColor.fromColor
-                |> Background.color
+            [ withPaletteDecoration
+                (\palette ->
+                    Palette.lightGray palette
+                        |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
+                        |> MaterialColor.fromColor
+                )
+                Background.color
             ]
         ]
     , ifDisabled =
-        (Button.baseButton palette |> .ifDisabled)
-            ++ (palette
-                    |> Palette.lightGray
-                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonDisabledOpacity
-                    |> MaterialColor.textAndBackground
-               )
+        (Button.baseButton |> .ifDisabled)
+            ++ MaterialColor.textAndBackground
+                (\{ theme } ->
+                    Palette.lightGray theme
+                        |> MaterialColor.withShade theme.on.surface MaterialColor.buttonDisabledOpacity
+                )
             ++ [ Element.mouseDown []
                , Element.mouseOver []
                , Element.focused []
                ]
     , ifActive =
-        [ palette
-            |> Palette.lightGray
-            |> MaterialColor.withShade palette.on.surface MaterialColor.buttonSelectedOpacity
-            |> MaterialColor.fromColor
-            |> Background.color
-        , palette
-            |> Palette.lightGray
-            |> MaterialColor.accessibleTextColor
-            |> MaterialColor.fromColor
-            |> Font.color
+        [ withPaletteAttribute
+            (\palette ->
+                Palette.lightGray palette
+                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonSelectedOpacity
+                    |> MaterialColor.fromColor
+            )
+            Background.color
+        , withPaletteAttribute
+            (Palette.lightGray
+                >> MaterialColor.accessibleTextColor
+                >> MaterialColor.fromColor
+            )
+            Font.color
         , Border.shadow <| MaterialColor.shadow 4
         ]
     , otherwise =
-        [ palette
-            |> Palette.lightGray
-            |> MaterialColor.fromColor
-            |> Background.color
-        , palette
-            |> Palette.lightGray
-            |> MaterialColor.accessibleTextColor
-            |> MaterialColor.fromColor
-            |> Font.color
+        [ withPaletteAttribute
+            (Palette.lightGray
+                >> MaterialColor.fromColor
+            )
+            Background.color
+        , withPaletteAttribute
+            (Palette.lightGray
+                >> MaterialColor.accessibleTextColor
+                >> MaterialColor.fromColor
+            )
+            Font.color
         ]
     , content =
         { elementRow =
@@ -98,23 +111,20 @@ chip palette =
                 { ifActive =
                     { size = 18
                     , color =
-                        palette
-                            |> Palette.lightGray
-                            |> MaterialColor.accessibleTextColor
+                        Palette.lightGray
+                            >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 18
                     , color =
-                        palette
-                            |> Palette.lightGray
-                            |> MaterialColor.accessibleTextColor
+                        Palette.lightGray
+                            >> MaterialColor.accessibleTextColor
                     }
                 , otherwise =
                     { size = 18
                     , color =
-                        palette
-                            |> Palette.lightGray
-                            |> MaterialColor.accessibleTextColor
+                        Palette.lightGray
+                            >> MaterialColor.accessibleTextColor
                     }
                 }
             }

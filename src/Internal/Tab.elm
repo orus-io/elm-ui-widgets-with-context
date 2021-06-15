@@ -1,30 +1,31 @@
 module Internal.Tab exposing (Tab, TabStyle, tab)
 
-import Element exposing (Attribute, Element)
+import Element.WithContext as Element
 import Internal.Button exposing (ButtonStyle)
+import Internal.Context exposing (Attribute, Element)
 import Internal.Select as Select exposing (Select)
 
 
 {-| -}
-type alias TabStyle msg =
-    { elementColumn : List (Attribute msg)
+type alias TabStyle context theme msg =
+    { elementColumn : List (Attribute context theme msg)
     , content :
         { tabs :
-            { elementRow : List (Attribute msg)
-            , content : ButtonStyle msg
+            { elementRow : List (Attribute context theme msg)
+            , content : ButtonStyle context theme msg
             }
-        , content : List (Attribute msg)
+        , content : List (Attribute context theme msg)
         }
     }
 
 
-type alias Tab msg =
-    { tabs : Select msg
-    , content : Maybe Int -> Element msg
+type alias Tab context theme msg =
+    { tabs : Select context theme msg
+    , content : Maybe Int -> Element context theme msg
     }
 
 
-tab : TabStyle msg -> Tab msg -> Element msg
+tab : TabStyle context theme msg -> Tab context theme msg -> Element context theme msg
 tab style { tabs, content } =
     [ tabs
         |> Select.select

@@ -23,150 +23,151 @@ module Internal.Item exposing
     , toItem
     )
 
-import Element exposing (Attribute, Element)
-import Element.Input as Input
+import Element.WithContext as Element
+import Element.WithContext.Input as Input
 import Internal.Button exposing (Button, ButtonStyle)
+import Internal.Context exposing (Attribute, Element)
 import Internal.Select as Select exposing (Select)
 import Widget.Icon exposing (Icon, IconStyle)
 
 
-type alias ItemStyle content msg =
-    { element : List (Attribute msg)
+type alias ItemStyle content context theme msg =
+    { element : List (Attribute context theme msg)
     , content : content
     }
 
 
-type alias DividerStyle msg =
-    { element : List (Attribute msg)
+type alias DividerStyle context theme msg =
+    { element : List (Attribute context theme msg)
     }
 
 
-type alias HeaderStyle msg =
-    { elementColumn : List (Attribute msg)
+type alias HeaderStyle context theme msg =
+    { elementColumn : List (Attribute context theme msg)
     , content :
-        { divider : DividerStyle msg
-        , title : List (Attribute msg)
+        { divider : DividerStyle context theme msg
+        , title : List (Attribute context theme msg)
         }
     }
 
 
-type alias FullBleedItemStyle msg =
-    { elementButton : List (Attribute msg)
-    , ifDisabled : List (Attribute msg)
-    , otherwise : List (Attribute msg)
+type alias FullBleedItemStyle context theme msg =
+    { elementButton : List (Attribute context theme msg)
+    , ifDisabled : List (Attribute context theme msg)
+    , otherwise : List (Attribute context theme msg)
     , content :
-        { elementRow : List (Attribute msg)
+        { elementRow : List (Attribute context theme msg)
         , content :
-            { text : { elementText : List (Attribute msg) }
-            , icon : IconStyle
+            { text : { elementText : List (Attribute context theme msg) }
+            , icon : IconStyle theme
             }
         }
     }
 
 
-type alias InsetItemStyle msg =
-    { elementButton : List (Attribute msg)
-    , ifDisabled : List (Attribute msg)
-    , otherwise : List (Attribute msg)
+type alias InsetItemStyle context theme msg =
+    { elementButton : List (Attribute context theme msg)
+    , ifDisabled : List (Attribute context theme msg)
+    , otherwise : List (Attribute context theme msg)
     , content :
-        { elementRow : List (Attribute msg)
+        { elementRow : List (Attribute context theme msg)
         , content :
-            { text : { elementText : List (Attribute msg) }
+            { text : { elementText : List (Attribute context theme msg) }
             , icon :
-                { element : List (Attribute msg)
-                , content : IconStyle
+                { element : List (Attribute context theme msg)
+                , content : IconStyle theme
                 }
-            , content : IconStyle
+            , content : IconStyle theme
             }
         }
     }
 
 
-type alias MultiLineItemStyle msg =
-    { elementButton : List (Attribute msg)
-    , ifDisabled : List (Attribute msg)
-    , otherwise : List (Attribute msg)
+type alias MultiLineItemStyle context theme msg =
+    { elementButton : List (Attribute context theme msg)
+    , ifDisabled : List (Attribute context theme msg)
+    , otherwise : List (Attribute context theme msg)
     , content :
-        { elementRow : List (Attribute msg)
+        { elementRow : List (Attribute context theme msg)
         , content :
             { description :
-                { elementColumn : List (Attribute msg)
+                { elementColumn : List (Attribute context theme msg)
                 , content :
-                    { title : { elementText : List (Attribute msg) }
-                    , text : { elementText : List (Attribute msg) }
+                    { title : { elementText : List (Attribute context theme msg) }
+                    , text : { elementText : List (Attribute context theme msg) }
                     }
                 }
             , icon :
-                { element : List (Attribute msg)
-                , content : IconStyle
+                { element : List (Attribute context theme msg)
+                , content : IconStyle theme
                 }
-            , content : IconStyle
+            , content : IconStyle theme
             }
         }
     }
 
 
-type alias ImageItemStyle msg =
-    { elementButton : List (Attribute msg)
-    , ifDisabled : List (Attribute msg)
-    , otherwise : List (Attribute msg)
+type alias ImageItemStyle context theme msg =
+    { elementButton : List (Attribute context theme msg)
+    , ifDisabled : List (Attribute context theme msg)
+    , otherwise : List (Attribute context theme msg)
     , content :
-        { elementRow : List (Attribute msg)
+        { elementRow : List (Attribute context theme msg)
         , content :
-            { text : { elementText : List (Attribute msg) }
-            , image : { element : List (Attribute msg) }
-            , content : IconStyle
+            { text : { elementText : List (Attribute context theme msg) }
+            , image : { element : List (Attribute context theme msg) }
+            , content : IconStyle theme
             }
         }
     }
 
 
-type alias ExpansionItemStyle msg =
-    { item : ItemStyle (InsetItemStyle msg) msg
-    , expandIcon : Icon msg
-    , collapseIcon : Icon msg
+type alias ExpansionItemStyle context theme msg =
+    { item : ItemStyle (InsetItemStyle context theme msg) context theme msg
+    , expandIcon : Icon context theme msg
+    , collapseIcon : Icon context theme msg
     }
 
 
-type alias Item msg =
-    List (Attribute msg) -> Element msg
+type alias Item context theme msg =
+    List (Attribute context theme msg) -> Element context theme msg
 
 
-type alias InsetItem msg =
+type alias InsetItem context theme msg =
     { text : String
     , onPress : Maybe msg
-    , icon : Icon msg
-    , content : Icon msg
+    , icon : Icon context theme msg
+    , content : Icon context theme msg
     }
 
 
-type alias ImageItem msg =
+type alias ImageItem context theme msg =
     { text : String
     , onPress : Maybe msg
-    , image : Element msg
-    , content : Icon msg
+    , image : Element context theme msg
+    , content : Icon context theme msg
     }
 
 
-type alias ExpansionItem msg =
-    { icon : Icon msg
+type alias ExpansionItem context theme msg =
+    { icon : Icon context theme msg
     , text : String
     , onToggle : Bool -> msg
-    , content : List (Item msg)
+    , content : List (Item context theme msg)
     , isExpanded : Bool
     }
 
 
-type alias MultiLineItem msg =
+type alias MultiLineItem context theme msg =
     { title : String
     , text : String
     , onPress : Maybe msg
-    , icon : Icon msg
-    , content : Icon msg
+    , icon : Icon context theme msg
+    , content : Icon context theme msg
     }
 
 
-fullBleedItem : ItemStyle (FullBleedItemStyle msg) msg -> Button msg -> Item msg
+fullBleedItem : ItemStyle (FullBleedItemStyle context theme msg) context theme msg -> Button context theme msg -> Item context theme msg
 fullBleedItem s { onPress, text, icon } =
     toItem s
         (\style ->
@@ -193,7 +194,7 @@ fullBleedItem s { onPress, text, icon } =
         )
 
 
-asItem : Element msg -> Item msg
+asItem : Element context theme msg -> Item context theme msg
 asItem element =
     toItem
         { element = []
@@ -202,12 +203,12 @@ asItem element =
         (always element)
 
 
-divider : ItemStyle (DividerStyle msg) msg -> Item msg
+divider : ItemStyle (DividerStyle context theme msg) context theme msg -> Item context theme msg
 divider style =
     toItem style (\{ element } -> Element.none |> Element.el element)
 
 
-headerItem : ItemStyle (HeaderStyle msg) msg -> String -> Item msg
+headerItem : ItemStyle (HeaderStyle context theme msg) context theme msg -> String -> Item context theme msg
 headerItem style title =
     toItem style
         (\{ elementColumn, content } ->
@@ -221,7 +222,7 @@ headerItem style title =
         )
 
 
-insetItem : ItemStyle (InsetItemStyle msg) msg -> InsetItem msg -> Item msg
+insetItem : ItemStyle (InsetItemStyle context theme msg) context theme msg -> InsetItem context theme msg -> Item context theme msg
 insetItem s { onPress, text, icon, content } =
     toItem s
         (\style ->
@@ -250,7 +251,7 @@ insetItem s { onPress, text, icon, content } =
         )
 
 
-imageItem : ItemStyle (ImageItemStyle msg) msg -> ImageItem msg -> Item msg
+imageItem : ItemStyle (ImageItemStyle context theme msg) context theme msg -> ImageItem context theme msg -> Item context theme msg
 imageItem s { onPress, text, image, content } =
     toItem s
         (\style ->
@@ -279,7 +280,7 @@ imageItem s { onPress, text, image, content } =
         )
 
 
-expansionItem : ExpansionItemStyle msg -> ExpansionItem msg -> List (Item msg)
+expansionItem : ExpansionItemStyle context theme msg -> ExpansionItem context theme msg -> List (Item context theme msg)
 expansionItem s { icon, text, onToggle, content, isExpanded } =
     insetItem s.item
         { text = text
@@ -300,7 +301,7 @@ expansionItem s { icon, text, onToggle, content, isExpanded } =
            )
 
 
-multiLineItem : ItemStyle (MultiLineItemStyle msg) msg -> MultiLineItem msg -> Item msg
+multiLineItem : ItemStyle (MultiLineItemStyle context theme msg) context theme msg -> MultiLineItem context theme msg -> Item context theme msg
 multiLineItem s { onPress, title, text, icon, content } =
     toItem s
         (\style ->
@@ -334,7 +335,7 @@ multiLineItem s { onPress, title, text, icon, content } =
         )
 
 
-selectItem : ItemStyle (ButtonStyle msg) msg -> Select msg -> List (Item msg)
+selectItem : ItemStyle (ButtonStyle context theme msg) context theme msg -> Select context theme msg -> List (Item context theme msg)
 selectItem s select =
     select
         |> Select.select
@@ -347,7 +348,7 @@ selectItem s select =
 --------------------------------------------------------------------------------
 
 
-toItem : ItemStyle style msg -> (style -> Element msg) -> Item msg
+toItem : ItemStyle style context theme msg -> (style -> Element context theme msg) -> Item context theme msg
 toItem style element =
     \attr ->
         element style.content

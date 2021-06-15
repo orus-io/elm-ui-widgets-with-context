@@ -12,22 +12,24 @@ module Internal.Material.Item exposing
     , selectItem
     )
 
-import Element
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
+import Element.WithContext.Font as Font
 import Html.Attributes as Attributes
 import Internal.Button exposing (ButtonStyle)
+import Internal.Context exposing (Context)
 import Internal.Item exposing (DividerStyle, ExpansionItemStyle, FullBleedItemStyle, HeaderStyle, ImageItemStyle, InsetItemStyle, ItemStyle, MultiLineItemStyle)
 import Internal.Material.Button as Button
+import Internal.Material.Context exposing (..)
 import Internal.Material.Icon as Icon
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 import Widget.Material.Typography as Typography
 
 
-fullBleedDivider : Palette -> ItemStyle (DividerStyle msg) msg
-fullBleedDivider palette =
+fullBleedDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+fullBleedDivider =
     { element =
         [ Element.width <| Element.fill
         , Element.height <| Element.px 1
@@ -38,16 +40,18 @@ fullBleedDivider palette =
         { element =
             [ Element.width <| Element.fill
             , Element.height <| Element.px 1
-            , Palette.lightGray palette
-                |> MaterialColor.fromColor
-                |> Background.color
+            , withPaletteAttribute
+                (Palette.lightGray
+                    >> MaterialColor.fromColor
+                )
+                Background.color
             ]
         }
     }
 
 
-insetDivider : Palette -> ItemStyle (DividerStyle msg) msg
-insetDivider palette =
+insetDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+insetDivider =
     { element =
         [ Element.width <| Element.fill
         , Element.height <| Element.px 1
@@ -63,16 +67,18 @@ insetDivider palette =
         { element =
             [ Element.width <| Element.fill
             , Element.height <| Element.px 1
-            , Palette.lightGray palette
-                |> MaterialColor.fromColor
-                |> Background.color
+            , withPaletteAttribute
+                (Palette.lightGray
+                    >> MaterialColor.fromColor
+                )
+                Background.color
             ]
         }
     }
 
 
-middleDivider : Palette -> ItemStyle (DividerStyle msg) msg
-middleDivider palette =
+middleDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+middleDivider =
     { element =
         [ Element.width <| Element.fill
         , Element.height <| Element.px 1
@@ -88,16 +94,18 @@ middleDivider palette =
         { element =
             [ Element.width <| Element.fill
             , Element.height <| Element.px 1
-            , Palette.lightGray palette
-                |> MaterialColor.fromColor
-                |> Background.color
+            , withPaletteAttribute
+                (Palette.lightGray
+                    >> MaterialColor.fromColor
+                )
+                Background.color
             ]
         }
     }
 
 
-insetHeader : Palette -> ItemStyle (HeaderStyle msg) msg
-insetHeader palette =
+insetHeader : ItemStyle (HeaderStyle context Theme msg) context Theme msg
+insetHeader =
     { element =
         [ Element.width <| Element.fill
         , Element.height <| Element.shrink
@@ -116,21 +124,23 @@ insetHeader palette =
             ]
         , content =
             { divider =
-                insetDivider palette
+                insetDivider
                     |> .content
             , title =
                 Typography.caption
-                    ++ [ Palette.textGray palette
-                            |> MaterialColor.fromColor
-                            |> Font.color
+                    ++ [ withPaletteAttribute
+                            (Palette.textGray
+                                >> MaterialColor.fromColor
+                            )
+                            Font.color
                        ]
             }
         }
     }
 
 
-fullBleedHeader : Palette -> ItemStyle (HeaderStyle msg) msg
-fullBleedHeader palette =
+fullBleedHeader : ItemStyle (HeaderStyle context Theme msg) context Theme msg
+fullBleedHeader =
     { element =
         [ Element.width <| Element.fill
         , Element.height <| Element.shrink
@@ -141,9 +151,11 @@ fullBleedHeader palette =
             , right = 0
             , top = 1
             }
-        , Palette.lightGray palette
-            |> MaterialColor.fromColor
-            |> Border.color
+        , withPaletteAttribute
+            (Palette.lightGray
+                >> MaterialColor.fromColor
+            )
+            Border.color
         ]
     , content =
         { elementColumn =
@@ -154,9 +166,11 @@ fullBleedHeader palette =
             { divider = { element = [] }
             , title =
                 Typography.subtitle2
-                    ++ [ Palette.gray palette
-                            |> MaterialColor.fromColor
-                            |> Font.color
+                    ++ [ withPaletteAttribute
+                            (Palette.gray
+                                >> MaterialColor.fromColor
+                            )
+                            Font.color
                        , Element.paddingXY 16 8
                        ]
             }
@@ -164,11 +178,11 @@ fullBleedHeader palette =
     }
 
 
-fullBleedItem : Palette -> ItemStyle (FullBleedItemStyle msg) msg
-fullBleedItem palette =
+fullBleedItem : ItemStyle (FullBleedItemStyle context Theme msg) context Theme msg
+fullBleedItem =
     let
         i =
-            insetItem palette
+            insetItem
     in
     { element = i.element
     , content =
@@ -186,8 +200,8 @@ fullBleedItem palette =
     }
 
 
-insetItem : Palette -> ItemStyle (InsetItemStyle msg) msg
-insetItem palette =
+insetItem : ItemStyle (InsetItemStyle context Theme msg) context Theme msg
+insetItem =
     { element = [ Element.padding 0 ]
     , content =
         { elementButton =
@@ -202,22 +216,28 @@ insetItem palette =
             ]
         , otherwise =
             [ Element.mouseDown <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.focused <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.mouseOver <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             ]
         , content =
@@ -231,12 +251,12 @@ insetItem palette =
                         ]
                     , content =
                         { size = 24
-                        , color = Palette.gray palette
+                        , color = Palette.gray
                         }
                     }
                 , content =
                     { size = 24
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 }
             }
@@ -244,8 +264,8 @@ insetItem palette =
     }
 
 
-multiLineItem : Palette -> ItemStyle (MultiLineItemStyle msg) msg
-multiLineItem palette =
+multiLineItem : ItemStyle (MultiLineItemStyle context Theme msg) context Theme msg
+multiLineItem =
     { element = [ Element.padding 0 ]
     , content =
         { elementButton =
@@ -260,22 +280,28 @@ multiLineItem palette =
             ]
         , otherwise =
             [ Element.mouseDown <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.focused <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.mouseOver <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             ]
         , content =
@@ -291,9 +317,11 @@ multiLineItem palette =
                         , text =
                             { elementText =
                                 Typography.body2
-                                    ++ [ Palette.gray palette
-                                            |> MaterialColor.fromColor
-                                            |> Font.color
+                                    ++ [ withPaletteAttribute
+                                            (Palette.gray
+                                                >> MaterialColor.fromColor
+                                            )
+                                            Font.color
                                        ]
                             }
                         }
@@ -305,12 +333,12 @@ multiLineItem palette =
                         ]
                     , content =
                         { size = 24
-                        , color = Palette.textGray palette
+                        , color = Palette.textGray
                         }
                     }
                 , content =
                     { size = 24
-                    , color = Palette.textGray palette
+                    , color = Palette.textGray
                     }
                 }
             }
@@ -318,8 +346,8 @@ multiLineItem palette =
     }
 
 
-imageItem : Palette -> ItemStyle (ImageItemStyle msg) msg
-imageItem palette =
+imageItem : ItemStyle (ImageItemStyle context Theme msg) context Theme msg
+imageItem =
     { element = [ Element.padding 0 ]
     , content =
         { elementButton =
@@ -334,22 +362,28 @@ imageItem palette =
             ]
         , otherwise =
             [ Element.mouseDown <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.focused <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.mouseOver <|
-                [ Palette.gray palette
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteDecoration
+                    (Palette.gray
+                        >> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             ]
         , content =
@@ -368,7 +402,7 @@ imageItem palette =
                     }
                 , content =
                     { size = 24
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 }
             }
@@ -376,16 +410,16 @@ imageItem palette =
     }
 
 
-expansionItem : Palette -> ExpansionItemStyle msg
-expansionItem palette =
-    { item = insetItem palette
+expansionItem : ExpansionItemStyle context Theme msg
+expansionItem =
+    { item = insetItem
     , expandIcon = Icon.expand_more
     , collapseIcon = Icon.expand_less
     }
 
 
-selectItem : Palette -> ItemStyle (ButtonStyle msg) msg
-selectItem palette =
+selectItem : ItemStyle (ButtonStyle context Theme msg) context Theme msg
+selectItem =
     { element = [ Element.paddingXY 8 4 ]
     , content =
         { elementButton =
@@ -396,46 +430,53 @@ selectItem palette =
             , Element.width <| Element.fill
             , Element.paddingXY 8 8
             , Border.rounded <| 4
-            , palette.surface
-                |> MaterialColor.accessibleTextColor
-                |> MaterialColor.fromColor
-                |> Font.color
+            , withSurfaceAttribute
+                (MaterialColor.accessibleTextColor
+                    >> MaterialColor.fromColor
+                )
+                Font.color
             , Element.mouseDown
-                [ palette.primary
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPrimaryDecoration
+                    (MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.focused
-                [ palette.primary
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPrimaryDecoration
+                    (MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.mouseOver
-                [ palette.primary
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPrimaryDecoration
+                    (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             ]
         , ifDisabled =
-            (Button.baseButton palette |> .ifDisabled)
-                ++ [ Palette.gray palette
-                        |> MaterialColor.fromColor
-                        |> Font.color
+            (Button.baseButton |> .ifDisabled)
+                ++ [ withPaletteAttribute
+                        (Palette.gray
+                            >> MaterialColor.fromColor
+                        )
+                        Font.color
                    , Element.mouseDown []
                    , Element.mouseOver []
                    , Element.focused []
                    ]
         , ifActive =
-            [ palette.primary
-                |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                |> MaterialColor.fromColor
-                |> Background.color
-            , palette.primary
-                |> MaterialColor.fromColor
-                |> Font.color
+            [ withPrimaryAttribute
+                (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                    >> MaterialColor.fromColor
+                )
+                Background.color
+            , withPrimaryAttribute
+                MaterialColor.fromColor
+                Font.color
             ]
         , otherwise =
             []
@@ -452,15 +493,15 @@ selectItem palette =
                 , icon =
                     { ifActive =
                         { size = 18
-                        , color = palette.surface |> MaterialColor.accessibleTextColor
+                        , color = .surface >> MaterialColor.accessibleTextColor
                         }
                     , ifDisabled =
                         { size = 18
-                        , color = Palette.gray palette
+                        , color = Palette.gray
                         }
                     , otherwise =
                         { size = 18
-                        , color = palette.surface |> MaterialColor.accessibleTextColor
+                        , color = .surface >> MaterialColor.accessibleTextColor
                         }
                     }
                 }

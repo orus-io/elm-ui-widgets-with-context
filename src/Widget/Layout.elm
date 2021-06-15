@@ -29,8 +29,9 @@ It is responsive and changes view to apply to the [Material Design guidelines](h
 
 -}
 
-import Element exposing (DeviceClass(..), Element)
+import Element.WithContext as Element exposing (DeviceClass(..))
 import Internal.Button exposing (Button, ButtonStyle)
+import Internal.Context exposing (Element)
 import Internal.Item as Item exposing (InsetItemStyle, ItemStyle)
 import Internal.List as List exposing (ColumnStyle)
 import Internal.Modal exposing (Modal)
@@ -56,7 +57,7 @@ getDeviceClass window =
 It is intended to hide the additional actions in a side menu.
 
 -}
-partitionActions : List (Button msg) -> { primaryActions : List (Button msg), moreActions : List (Button msg) }
+partitionActions : List (Button context theme msg) -> { primaryActions : List (Button context theme msg), moreActions : List (Button context theme msg) }
 partitionActions actions =
     { primaryActions =
         if (actions |> List.length) > 4 then
@@ -88,15 +89,15 @@ partitionActions actions =
 {-| Left sheet containing a title and a menu.
 -}
 leftSheet :
-    { button : ItemStyle (ButtonStyle msg) msg
-    , sheet : ColumnStyle msg
+    { button : ItemStyle (ButtonStyle context theme msg) context theme msg
+    , sheet : ColumnStyle context theme msg
     }
     ->
-        { title : Element msg
-        , menu : Select msg
+        { title : Element context theme msg
+        , menu : Select context theme msg
         , onDismiss : msg
         }
-    -> Modal msg
+    -> Modal context theme msg
 leftSheet style { title, onDismiss, menu } =
     { onDismiss = Just onDismiss
     , content =
@@ -114,14 +115,14 @@ leftSheet style { title, onDismiss, menu } =
 {-| Right sheet containg a simple list of buttons
 -}
 rightSheet :
-    { sheet : ColumnStyle msg
-    , insetItem : ItemStyle (InsetItemStyle msg) msg
+    { sheet : ColumnStyle context theme msg
+    , insetItem : ItemStyle (InsetItemStyle context theme msg) context theme msg
     }
     ->
         { onDismiss : msg
-        , moreActions : List (Button msg)
+        , moreActions : List (Button context theme msg)
         }
-    -> Modal msg
+    -> Modal context theme msg
 rightSheet style { onDismiss, moreActions } =
     { onDismiss = Just onDismiss
     , content =
@@ -146,12 +147,12 @@ rightSheet style { onDismiss, moreActions } =
 {-| Top sheet containg a searchbar spaning the full witdh
 -}
 searchSheet :
-    TextInputStyle msg
+    TextInputStyle context theme msg
     ->
         { onDismiss : msg
-        , search : TextInput msg
+        , search : TextInput context theme msg
         }
-    -> Modal msg
+    -> Modal context theme msg
 searchSheet style { onDismiss, search } =
     { onDismiss = Just onDismiss
     , content =
@@ -188,13 +189,13 @@ The order from most important to least important is as follows:
 
 -}
 orderModals :
-    { dialog : Maybe (Modal msg)
-    , topSheet : Maybe (Modal msg)
-    , bottomSheet : Maybe (Modal msg)
-    , leftSheet : Maybe (Modal msg)
-    , rightSheet : Maybe (Modal msg)
+    { dialog : Maybe (Modal context theme msg)
+    , topSheet : Maybe (Modal context theme msg)
+    , bottomSheet : Maybe (Modal context theme msg)
+    , leftSheet : Maybe (Modal context theme msg)
+    , rightSheet : Maybe (Modal context theme msg)
     }
-    -> List (Modal msg)
+    -> List (Modal context theme msg)
 orderModals modals =
     [ modals.dialog
     , modals.leftSheet

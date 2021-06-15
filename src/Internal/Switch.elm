@@ -1,29 +1,30 @@
 module Internal.Switch exposing (Switch, SwitchStyle, switch)
 
-import Element exposing (Attribute, Element)
-import Element.Input as Input
-import Element.Region as Region
+import Element.WithContext as Element
+import Element.WithContext.Input as Input
+import Element.WithContext.Region as Region
+import Internal.Context exposing (Attribute, Element)
 
 
 {-| -}
-type alias SwitchStyle msg =
-    { elementButton : List (Attribute msg)
+type alias SwitchStyle context theme msg =
+    { elementButton : List (Attribute context theme msg)
     , content :
-        { element : List (Attribute msg)
-        , ifDisabled : List (Attribute msg)
-        , ifActive : List (Attribute msg)
-        , otherwise : List (Attribute msg)
+        { element : List (Attribute context theme msg)
+        , ifDisabled : List (Attribute context theme msg)
+        , ifActive : List (Attribute context theme msg)
+        , otherwise : List (Attribute context theme msg)
         }
     , contentInFront :
-        { element : List (Attribute msg)
-        , ifDisabled : List (Attribute msg)
-        , ifActive : List (Attribute msg)
-        , otherwise : List (Attribute msg)
+        { element : List (Attribute context theme msg)
+        , ifDisabled : List (Attribute context theme msg)
+        , ifActive : List (Attribute context theme msg)
+        , otherwise : List (Attribute context theme msg)
         , content :
-            { element : List (Attribute msg)
-            , ifDisabled : List (Attribute msg)
-            , ifActive : List (Attribute msg)
-            , otherwise : List (Attribute msg)
+            { element : List (Attribute context theme msg)
+            , ifDisabled : List (Attribute context theme msg)
+            , ifActive : List (Attribute context theme msg)
+            , otherwise : List (Attribute context theme msg)
             }
         }
     }
@@ -36,7 +37,7 @@ type alias Switch msg =
     }
 
 
-switch : SwitchStyle msg -> Switch msg -> Element msg
+switch : SwitchStyle context theme msg -> Switch msg -> Element context theme msg
 switch style { onPress, description, active } =
     Input.button
         (style.elementButton

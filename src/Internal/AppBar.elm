@@ -1,28 +1,29 @@
 module Internal.AppBar exposing (AppBarStyle, menuBar, tabBar)
 
-import Element exposing (Attribute, DeviceClass(..), Element)
-import Element.Input as Input
+import Element.WithContext as Element exposing (DeviceClass(..))
+import Element.WithContext.Input as Input
 import Internal.Button as Button exposing (Button, ButtonStyle)
+import Internal.Context exposing (Attribute, Element)
 import Internal.Select as Select exposing (Select)
 import Internal.TextInput as TextInput exposing (TextInput, TextInputStyle)
 import Widget.Customize as Customize
 import Widget.Icon exposing (Icon)
 
 
-type alias AppBarStyle content msg =
-    { elementRow : List (Attribute msg) --header
+type alias AppBarStyle content context theme msg =
+    { elementRow : List (Attribute context theme msg) --header
     , content :
         { menu :
-            { elementRow : List (Attribute msg)
+            { elementRow : List (Attribute context theme msg)
             , content : content
             }
-        , search : TextInputStyle msg --search
+        , search : TextInputStyle context theme msg --search
         , actions :
-            { elementRow : List (Attribute msg)
+            { elementRow : List (Attribute context theme msg)
             , content :
-                { button : ButtonStyle msg --menuButton
-                , searchIcon : Icon msg
-                , moreVerticalIcon : Icon msg
+                { button : ButtonStyle context theme msg --menuButton
+                , searchIcon : Icon context theme msg
+                , moreVerticalIcon : Icon context theme msg
                 }
             }
         }
@@ -31,20 +32,21 @@ type alias AppBarStyle content msg =
 
 menuBar :
     AppBarStyle
-        { menuIcon : Icon msg
-        , title : List (Attribute msg)
+        { menuIcon : Icon context theme msg
+        , title : List (Attribute context theme msg)
         }
+        context
+        theme
         msg
     ->
-        { title : Element msg
-        , deviceClass : DeviceClass
+        { title : Element context theme msg
         , openLeftSheet : Maybe msg
         , openRightSheet : Maybe msg
         , openTopSheet : Maybe msg
-        , primaryActions : List (Button msg)
-        , search : Maybe (TextInput msg)
+        , primaryActions : List (Button context theme msg)
+        , search : Maybe (TextInput context theme msg)
         }
-    -> Element msg
+    -> Element context theme msg
 menuBar style m =
     internalNav
         [ Button.iconButton style.content.actions.content.button
@@ -70,20 +72,21 @@ menuBar style m =
 -}
 tabBar :
     AppBarStyle
-        { menuTabButton : ButtonStyle msg
-        , title : List (Attribute msg)
+        { menuTabButton : ButtonStyle context theme msg
+        , title : List (Attribute context theme msg)
         }
+        context
+        theme
         msg
     ->
-        { title : Element msg
-        , menu : Select msg
-        , deviceClass : DeviceClass
+        { title : Element context theme msg
+        , menu : Select context theme msg
         , openRightSheet : Maybe msg
         , openTopSheet : Maybe msg
-        , primaryActions : List (Button msg)
-        , search : Maybe (TextInput msg)
+        , primaryActions : List (Button context theme msg)
+        , search : Maybe (TextInput context theme msg)
         }
-    -> Element msg
+    -> Element context theme msg
 tabBar style m =
     internalNav
         [ m.title |> Element.el style.content.menu.content.title
@@ -108,112 +111,115 @@ tabBar style m =
 
 {-| -}
 internalNav :
-    List (Element msg)
+    List (Element context theme msg)
     ->
-        { elementRow : List (Attribute msg) --header
+        { elementRow : List (Attribute context theme msg) --header
         , content :
             { menu :
-                { elementRow : List (Attribute msg)
+                { elementRow : List (Attribute context theme msg)
                 }
-            , search : TextInputStyle msg --search
+            , search : TextInputStyle context theme msg --search
             , actions :
-                { elementRow : List (Attribute msg)
+                { elementRow : List (Attribute context theme msg)
                 , content :
-                    { button : ButtonStyle msg --menuButton
-                    , searchIcon : Icon msg
-                    , moreVerticalIcon : Icon msg
+                    { button : ButtonStyle context theme msg --menuButton
+                    , searchIcon : Icon context theme msg
+                    , moreVerticalIcon : Icon context theme msg
                     }
                 }
             }
         }
     ->
         { model
-            | deviceClass : DeviceClass
-            , openRightSheet : Maybe msg
+            | openRightSheet : Maybe msg
             , openTopSheet : Maybe msg
-            , primaryActions : List (Button msg)
-            , search : Maybe (TextInput msg)
+            , primaryActions : List (Button context theme msg)
+            , search : Maybe (TextInput context theme msg)
         }
-    -> Element msg
-internalNav menuElements style { deviceClass, openRightSheet, openTopSheet, primaryActions, search } =
-    [ menuElements
-        |> Element.row style.content.menu.elementRow
-    , if deviceClass == Phone || deviceClass == Tablet then
-        Element.none
+    -> Element context theme msg
+internalNav menuElements style { openRightSheet, openTopSheet, primaryActions, search } =
+    Element.with
+        (\{ device } ->
+            [ menuElements
+                |> Element.row style.content.menu.elementRow
+            , if device.class == Phone || device.class == Tablet then
+                Element.none
 
-      else
-        search
-            |> Maybe.map
-                (\{ onChange, text, label } ->
-                    TextInput.textInput style.content.search
-                        { chips = []
-                        , onChange = onChange
-                        , text = text
-                        , placeholder =
-                            Just <|
-                                Input.placeholder [] <|
-                                    Element.text label
-                        , label = label
-                        }
-                )
-            |> Maybe.withDefault Element.none
-    , [ search
-            |> Maybe.map
-                (\{ label } ->
-                    if deviceClass == Tablet then
-                        [ Button.button
-                            (style.content.actions.content.button
-                                --FIX FOR ISSUE #30
-                                |> Customize.elementButton [ Element.width Element.shrink ]
-                            )
-                            { onPress = openTopSheet
-                            , icon = style.content.actions.content.searchIcon
-                            , text = label
-                            }
-                        ]
-
-                    else if deviceClass == Phone then
-                        [ Button.iconButton style.content.actions.content.button
-                            { onPress = openTopSheet
-                            , icon = style.content.actions.content.searchIcon
-                            , text = label
-                            }
-                        ]
-
-                    else
-                        []
-                )
-            |> Maybe.withDefault []
-      , primaryActions
-            |> List.map
-                (if deviceClass == Phone then
-                    Button.iconButton style.content.actions.content.button
-
-                 else
-                    Button.button
-                        (style.content.actions.content.button
-                            --FIX FOR ISSUE #30
-                            |> Customize.elementButton [ Element.width Element.shrink ]
+              else
+                search
+                    |> Maybe.map
+                        (\{ onChange, text, label } ->
+                            TextInput.textInput style.content.search
+                                { chips = []
+                                , onChange = onChange
+                                , text = text
+                                , placeholder =
+                                    Just <|
+                                        Input.placeholder [] <|
+                                            Element.text label
+                                , label = label
+                                }
                         )
-                )
-      , case openRightSheet of
-            Nothing ->
-                []
+                    |> Maybe.withDefault Element.none
+            , [ search
+                    |> Maybe.map
+                        (\{ label } ->
+                            if device.class == Tablet then
+                                [ Button.button
+                                    (style.content.actions.content.button
+                                        --FIX FOR ISSUE #30
+                                        |> Customize.elementButton [ Element.width Element.shrink ]
+                                    )
+                                    { onPress = openTopSheet
+                                    , icon = style.content.actions.content.searchIcon
+                                    , text = label
+                                    }
+                                ]
 
-            Just _ ->
-                [ Button.iconButton style.content.actions.content.button
-                    { onPress = openRightSheet
-                    , icon = style.content.actions.content.moreVerticalIcon
-                    , text = "More"
-                    }
-                ]
-      ]
-        |> List.concat
-        |> Element.row style.content.actions.elementRow
-    ]
-        |> Element.row
+                            else if device.class == Phone then
+                                [ Button.iconButton style.content.actions.content.button
+                                    { onPress = openTopSheet
+                                    , icon = style.content.actions.content.searchIcon
+                                    , text = label
+                                    }
+                                ]
+
+                            else
+                                []
+                        )
+                    |> Maybe.withDefault []
+              , primaryActions
+                    |> List.map
+                        (if device.class == Phone then
+                            Button.iconButton style.content.actions.content.button
+
+                         else
+                            Button.button
+                                (style.content.actions.content.button
+                                    --FIX FOR ISSUE #30
+                                    |> Customize.elementButton [ Element.width Element.shrink ]
+                                )
+                        )
+              , case openRightSheet of
+                    Nothing ->
+                        []
+
+                    Just _ ->
+                        [ Button.iconButton style.content.actions.content.button
+                            { onPress = openRightSheet
+                            , icon = style.content.actions.content.moreVerticalIcon
+                            , text = "More"
+                            }
+                        ]
+              ]
+                |> List.concat
+                |> Element.row style.content.actions.elementRow
+            ]
+        )
+        (Element.row
             (style.elementRow
                 ++ [ Element.alignTop
                    , Element.width <| Element.fill
                    ]
             )
+        )

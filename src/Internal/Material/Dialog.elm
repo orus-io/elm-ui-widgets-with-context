@@ -1,17 +1,19 @@
 module Internal.Material.Dialog exposing (alertDialog)
 
-import Element
-import Element.Background as Background
-import Element.Border as Border
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
+import Internal.Context exposing (Context)
 import Internal.Dialog exposing (DialogStyle)
 import Internal.Material.Button as Button
+import Internal.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 import Widget.Material.Typography as Typography
 
 
-alertDialog : Palette -> DialogStyle msg
-alertDialog palette =
+alertDialog : DialogStyle context Theme msg
+alertDialog =
     { elementColumn =
         [ Border.rounded 4
         , Element.fill
@@ -19,7 +21,7 @@ alertDialog palette =
             |> Element.minimum 280
             |> Element.width
         , Element.height <| Element.minimum 182 <| Element.shrink
-        , Background.color <| MaterialColor.fromColor <| palette.surface
+        , Background.color |> withSurfaceAttribute MaterialColor.fromColor
         ]
     , content =
         { title =
@@ -51,8 +53,8 @@ alertDialog palette =
                 , Element.alignBottom
                 ]
             , content =
-                { accept = Button.containedButton palette
-                , dismiss = Button.textButton palette
+                { accept = Button.containedButton
+                , dismiss = Button.textButton
                 }
             }
         }

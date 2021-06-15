@@ -1,25 +1,26 @@
 module Internal.Dialog exposing (Dialog, DialogStyle, dialog)
 
-import Element exposing (Attribute)
+import Element.WithContext as Element
 import Internal.Button as Button exposing (ButtonStyle, TextButton)
+import Internal.Context exposing (Attribute, Context)
 import Internal.Modal exposing (Modal)
 
 
 {-| -}
-type alias DialogStyle msg =
-    { elementColumn : List (Attribute msg)
+type alias DialogStyle context theme msg =
+    { elementColumn : List (Attribute context theme msg)
     , content :
         { title :
-            { contentText : List (Attribute msg)
+            { contentText : List (Attribute context theme msg)
             }
         , text :
-            { contentText : List (Attribute msg)
+            { contentText : List (Attribute context theme msg)
             }
         , buttons :
-            { elementRow : List (Attribute msg)
+            { elementRow : List (Attribute context theme msg)
             , content :
-                { accept : ButtonStyle msg
-                , dismiss : ButtonStyle msg
+                { accept : ButtonStyle context theme msg
+                , dismiss : ButtonStyle context theme msg
                 }
             }
         }
@@ -35,9 +36,9 @@ type alias Dialog msg =
 
 
 dialog :
-    DialogStyle msg
+    DialogStyle context theme msg
     -> Dialog msg
-    -> Modal msg
+    -> Modal context theme msg
 dialog style { title, text, accept, dismiss } =
     { onDismiss =
         case ( accept, dismiss ) of

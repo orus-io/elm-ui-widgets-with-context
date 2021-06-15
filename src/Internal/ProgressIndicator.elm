@@ -1,17 +1,17 @@
 module Internal.ProgressIndicator exposing (ProgressIndicatorStyle, circularProgressIndicator)
 
-import Element exposing (Element)
+import Internal.Context exposing (Element)
 
 
 {-| -}
-type alias ProgressIndicatorStyle msg =
-    { elementFunction : Maybe Float -> Element msg
+type alias ProgressIndicatorStyle context theme msg =
+    { elementFunction : Maybe Float -> Element context theme msg
     }
 
 
 circularProgressIndicator :
-    ProgressIndicatorStyle msg
+    ProgressIndicatorStyle context theme msg
     -> Maybe Float
-    -> Element msg
+    -> Element context theme msg
 circularProgressIndicator style maybeProgress =
     style.elementFunction maybeProgress

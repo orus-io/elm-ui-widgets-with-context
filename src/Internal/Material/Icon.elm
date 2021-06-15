@@ -1,30 +1,35 @@
 module Internal.Material.Icon exposing (expand_less, expand_more, icon, menu, more_vert, search)
 
 import Color exposing (Color)
-import Element exposing (Element)
+import Element.WithContext as Element
+import Internal.Context exposing (Element)
 import Svg exposing (Svg)
 import Svg.Attributes
 import Widget.Icon exposing (Icon)
 
 
-icon : { viewBox : String, size : Int, color : Color } -> List (Svg msg) -> Element msg
-icon { viewBox, size, color } =
-    Svg.svg
-        [ Svg.Attributes.height <| String.fromInt size
-        , Svg.Attributes.stroke <| Color.toCssString <| color
-        , Svg.Attributes.fill <| Color.toCssString <| color
+icon : { viewBox : String, size : Int, color : theme -> Color } -> List (Svg msg) -> Element context theme msg
+icon { viewBox, size, color } svgElements =
+    Element.with
+        (\{ theme } ->
+            Svg.svg
+                [ Svg.Attributes.height <| String.fromInt size
+                , Svg.Attributes.stroke <| Color.toCssString <| color theme
+                , Svg.Attributes.fill <| Color.toCssString <| color theme
 
-        --, Svg.Attributes.strokeLinecap "round"
-        --, Svg.Attributes.strokeLinejoin "round"
-        --, Svg.Attributes.strokeWidth "2"
-        , Svg.Attributes.viewBox viewBox
-        , Svg.Attributes.width <| String.fromInt size
-        ]
-        >> Element.html
-        >> Element.el []
+                --, Svg.Attributes.strokeLinecap "round"
+                --, Svg.Attributes.strokeLinejoin "round"
+                --, Svg.Attributes.strokeWidth "2"
+                , Svg.Attributes.viewBox viewBox
+                , Svg.Attributes.width <| String.fromInt size
+                ]
+                svgElements
+                |> Element.html
+        )
+        (Element.el [])
 
 
-menu : Icon msg
+menu : Icon context theme msg
 menu { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -38,7 +43,7 @@ menu { size, color } =
         ]
 
 
-more_vert : Icon msg
+more_vert : Icon context theme msg
 more_vert { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -52,7 +57,7 @@ more_vert { size, color } =
         ]
 
 
-search : Icon msg
+search : Icon context theme msg
 search { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -66,7 +71,7 @@ search { size, color } =
         ]
 
 
-expand_less : Icon msg
+expand_less : Icon context theme msg
 expand_less { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -80,7 +85,7 @@ expand_less { size, color } =
         ]
 
 
-expand_more : Icon msg
+expand_more : Icon context theme msg
 expand_more { size, color } =
     icon
         { viewBox = "0 0 48 48"

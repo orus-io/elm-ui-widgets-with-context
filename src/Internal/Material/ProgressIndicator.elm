@@ -1,71 +1,76 @@
 module Internal.Material.ProgressIndicator exposing (determinateCircularIcon, indeterminateCircularIcon, progressIndicator)
 
 import Color
-import Element exposing (Attribute, Element)
+import Element.WithContext as Element
+import Internal.Context exposing (Attribute, Element)
+import Internal.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Internal.ProgressIndicator exposing (ProgressIndicatorStyle)
 import Svg
 import Svg.Attributes
 
 
-indeterminateCircularIcon : Color.Color -> List (Attribute msg) -> Element msg
+indeterminateCircularIcon : (Palette -> Color.Color) -> List (Attribute context Theme msg) -> Element context Theme msg
 indeterminateCircularIcon color attribs =
     -- Based on example at https://codepen.io/FezVrasta/pen/oXrgdR
-    Svg.svg
-        [ Svg.Attributes.height "48px"
-        , Svg.Attributes.width "48px"
-        , Svg.Attributes.viewBox "0 0 66 66"
-        , Svg.Attributes.xmlSpace "http://www.w3.org/2000/svg"
-        ]
-        [ Svg.g []
-            [ Svg.animateTransform
-                [ Svg.Attributes.attributeName "transform"
-                , Svg.Attributes.type_ "rotate"
-                , Svg.Attributes.values "0 33 33;270 33 33"
-                , Svg.Attributes.begin "0s"
-                , Svg.Attributes.dur "1.4s"
-                , Svg.Attributes.fill "freeze"
-                , Svg.Attributes.repeatCount "indefinite"
+    withPalette
+        (\palette ->
+            Svg.svg
+                [ Svg.Attributes.height "48px"
+                , Svg.Attributes.width "48px"
+                , Svg.Attributes.viewBox "0 0 66 66"
+                , Svg.Attributes.xmlSpace "http://www.w3.org/2000/svg"
                 ]
-                []
-            , Svg.circle
-                [ Svg.Attributes.fill "none"
-                , Svg.Attributes.stroke (Color.toCssString color)
-                , Svg.Attributes.strokeWidth "5"
-                , Svg.Attributes.strokeLinecap "square"
-                , Svg.Attributes.cx "33"
-                , Svg.Attributes.cy "33"
-                , Svg.Attributes.r "30"
-                , Svg.Attributes.strokeDasharray "187"
-                , Svg.Attributes.strokeDashoffset "610"
-                ]
-                [ Svg.animateTransform
-                    [ Svg.Attributes.attributeName "transform"
-                    , Svg.Attributes.type_ "rotate"
-                    , Svg.Attributes.values "0 33 33;135 33 33;450 33 33"
-                    , Svg.Attributes.begin "0s"
-                    , Svg.Attributes.dur "1.4s"
-                    , Svg.Attributes.fill "freeze"
-                    , Svg.Attributes.repeatCount "indefinite"
+                [ Svg.g []
+                    [ Svg.animateTransform
+                        [ Svg.Attributes.attributeName "transform"
+                        , Svg.Attributes.type_ "rotate"
+                        , Svg.Attributes.values "0 33 33;270 33 33"
+                        , Svg.Attributes.begin "0s"
+                        , Svg.Attributes.dur "1.4s"
+                        , Svg.Attributes.fill "freeze"
+                        , Svg.Attributes.repeatCount "indefinite"
+                        ]
+                        []
+                    , Svg.circle
+                        [ Svg.Attributes.fill "none"
+                        , Svg.Attributes.stroke (Color.toCssString (color palette))
+                        , Svg.Attributes.strokeWidth "5"
+                        , Svg.Attributes.strokeLinecap "square"
+                        , Svg.Attributes.cx "33"
+                        , Svg.Attributes.cy "33"
+                        , Svg.Attributes.r "30"
+                        , Svg.Attributes.strokeDasharray "187"
+                        , Svg.Attributes.strokeDashoffset "610"
+                        ]
+                        [ Svg.animateTransform
+                            [ Svg.Attributes.attributeName "transform"
+                            , Svg.Attributes.type_ "rotate"
+                            , Svg.Attributes.values "0 33 33;135 33 33;450 33 33"
+                            , Svg.Attributes.begin "0s"
+                            , Svg.Attributes.dur "1.4s"
+                            , Svg.Attributes.fill "freeze"
+                            , Svg.Attributes.repeatCount "indefinite"
+                            ]
+                            []
+                        , Svg.animate
+                            [ Svg.Attributes.attributeName "stroke-dashoffset"
+                            , Svg.Attributes.values "187;46.75;187"
+                            , Svg.Attributes.begin "0s"
+                            , Svg.Attributes.dur "1.4s"
+                            , Svg.Attributes.fill "freeze"
+                            , Svg.Attributes.repeatCount "indefinite"
+                            ]
+                            []
+                        ]
                     ]
-                    []
-                , Svg.animate
-                    [ Svg.Attributes.attributeName "stroke-dashoffset"
-                    , Svg.Attributes.values "187;46.75;187"
-                    , Svg.Attributes.begin "0s"
-                    , Svg.Attributes.dur "1.4s"
-                    , Svg.Attributes.fill "freeze"
-                    , Svg.Attributes.repeatCount "indefinite"
-                    ]
-                    []
                 ]
-            ]
-        ]
-        |> Element.html
-        |> Element.el attribs
+                |> Element.html
+        )
+        (Element.el attribs)
 
 
-determinateCircularIcon : Color.Color -> List (Attribute msg) -> Float -> Element msg
+determinateCircularIcon : (Palette -> Color.Color) -> List (Attribute context Theme msg) -> Float -> Element context Theme msg
 determinateCircularIcon color attribs progress =
     -- With help from https://css-tricks.com/building-progress-ring-quickly/
     let
@@ -79,42 +84,45 @@ determinateCircularIcon color attribs progress =
                 - (188 * clampedProgress)
                 |> round
     in
-    Svg.svg
-        [ Svg.Attributes.height "48px"
-        , Svg.Attributes.width "48px"
-        , Svg.Attributes.viewBox "0 0 66 66"
-        , Svg.Attributes.xmlSpace "http://www.w3.org/2000/svg"
-        ]
-        [ Svg.g []
-            [ Svg.circle
-                [ Svg.Attributes.fill "none"
-                , Svg.Attributes.stroke (Color.toCssString color)
-                , Svg.Attributes.strokeWidth "5"
-                , Svg.Attributes.strokeLinecap "butt"
-                , Svg.Attributes.cx "33"
-                , Svg.Attributes.cy "33"
-                , Svg.Attributes.r "30"
-                , Svg.Attributes.strokeDasharray "188 188"
-                , Svg.Attributes.strokeDashoffset (String.fromInt strokeDashoffset)
-                , Svg.Attributes.transform "rotate(-90 33 33)"
+    withPalette
+        (\palette ->
+            Svg.svg
+                [ Svg.Attributes.height "48px"
+                , Svg.Attributes.width "48px"
+                , Svg.Attributes.viewBox "0 0 66 66"
+                , Svg.Attributes.xmlSpace "http://www.w3.org/2000/svg"
                 ]
-                []
-            ]
-        ]
-        |> Element.html
-        |> Element.el attribs
+                [ Svg.g []
+                    [ Svg.circle
+                        [ Svg.Attributes.fill "none"
+                        , Svg.Attributes.stroke (Color.toCssString (color palette))
+                        , Svg.Attributes.strokeWidth "5"
+                        , Svg.Attributes.strokeLinecap "butt"
+                        , Svg.Attributes.cx "33"
+                        , Svg.Attributes.cy "33"
+                        , Svg.Attributes.r "30"
+                        , Svg.Attributes.strokeDasharray "188 188"
+                        , Svg.Attributes.strokeDashoffset (String.fromInt strokeDashoffset)
+                        , Svg.Attributes.transform "rotate(-90 33 33)"
+                        ]
+                        []
+                    ]
+                ]
+                |> Element.html
+        )
+        (Element.el attribs)
 
 
 {-| A circular progress indicator
 -}
-progressIndicator : Palette -> ProgressIndicatorStyle msg
-progressIndicator palette =
+progressIndicator : ProgressIndicatorStyle context Theme msg
+progressIndicator =
     { elementFunction =
         \maybeProgress ->
             case maybeProgress of
                 Nothing ->
-                    indeterminateCircularIcon palette.primary []
+                    indeterminateCircularIcon .primary []
 
                 Just progress ->
-                    determinateCircularIcon palette.primary [] progress
+                    determinateCircularIcon .primary [] progress
     }

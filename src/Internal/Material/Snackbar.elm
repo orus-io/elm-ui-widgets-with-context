@@ -1,18 +1,20 @@
 module Internal.Material.Snackbar exposing (snackbar)
 
-import Element
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
+import Element.WithContext.Font as Font
+import Internal.Context exposing (Context)
 import Internal.Material.Button as Button
+import Internal.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Widget.Customize as Customize
 import Widget.Material.Color as MaterialColor
 import Widget.Snackbar exposing (SnackbarStyle)
 
 
-snackbar : Palette -> SnackbarStyle msg
-snackbar palette =
+snackbar : SnackbarStyle context Palette msg
+snackbar =
     { elementRow =
         [ MaterialColor.dark
             |> MaterialColor.fromColor
@@ -35,12 +37,15 @@ snackbar palette =
                 ]
             }
         , button =
-            Button.textButton palette
+            Button.textButton
                 |> Customize.elementButton
-                    [ MaterialColor.dark
-                        |> MaterialColor.accessibleWithTextColor palette.primary
-                        |> MaterialColor.fromColor
-                        |> Font.color
+                    [ withPrimaryAttribute
+                        (\primary ->
+                            MaterialColor.dark
+                                |> MaterialColor.accessibleWithTextColor primary
+                                |> MaterialColor.fromColor
+                        )
+                        Font.color
                     ]
         }
     }

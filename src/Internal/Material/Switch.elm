@@ -1,17 +1,18 @@
 module Internal.Material.Switch exposing (switch)
 
 import Color
-import Element
-import Element.Background as Background
-import Element.Border as Border
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
 import Html.Attributes as Attributes
+import Internal.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Internal.Switch exposing (SwitchStyle)
 import Widget.Material.Color as MaterialColor
 
 
-switch : Palette -> SwitchStyle msg
-switch palette =
+switch : SwitchStyle context Theme msg
+switch =
     { elementButton =
         [ Element.height <| Element.px 38
         , Element.width <| Element.px <| 58 - 18
@@ -29,23 +30,29 @@ switch palette =
             ]
         , ifDisabled =
             [ Element.htmlAttribute <| Attributes.style "cursor" "not-allowed"
-            , palette.surface
-                |> MaterialColor.withShade (Palette.gray palette)
-                    (0.5 * MaterialColor.buttonDisabledOpacity)
-                |> MaterialColor.fromColor
-                |> Background.color
+            , withPaletteAttribute
+                (\palette ->
+                    palette.surface
+                        |> MaterialColor.withShade (Palette.gray palette)
+                            (0.5 * MaterialColor.buttonDisabledOpacity)
+                        |> MaterialColor.fromColor
+                )
+                Background.color
             ]
         , ifActive =
-            [ palette.primary
-                |> MaterialColor.scaleOpacity 0.5
-                |> MaterialColor.fromColor
-                |> Background.color
+            [ withPrimaryAttribute
+                (MaterialColor.scaleOpacity 0.5
+                    >> MaterialColor.fromColor
+                )
+                Background.color
             ]
         , otherwise =
-            [ Palette.gray palette
-                |> MaterialColor.scaleOpacity 0.5
-                |> MaterialColor.fromColor
-                |> Background.color
+            [ withPaletteAttribute
+                (Palette.gray
+                    >> MaterialColor.scaleOpacity 0.5
+                    >> MaterialColor.fromColor
+                )
+                Background.color
             ]
         }
     , contentInFront =
@@ -58,22 +65,25 @@ switch palette =
             [ Element.htmlAttribute <| Attributes.style "cursor" "not-allowed" ]
         , ifActive =
             [ Element.mouseDown
-                [ palette.primary
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPrimaryDecoration
+                    (MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.focused
-                [ palette.primary
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPrimaryDecoration
+                    (MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.mouseOver
-                [ palette.primary
-                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPrimaryDecoration
+                    (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , Element.alignRight
             , Element.moveRight 8
@@ -108,30 +118,37 @@ switch palette =
                 , Element.centerX
                 , Border.rounded <| 10
                 , Border.shadow <| MaterialColor.shadow 2
-                , palette.surface
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                , withSurfaceAttribute
+                    MaterialColor.fromColor
+                    Background.color
                 ]
             , ifDisabled =
-                [ palette.surface
-                    |> MaterialColor.withShade Color.gray MaterialColor.buttonDisabledOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withSurfaceAttribute
+                    (MaterialColor.withShade Color.gray MaterialColor.buttonDisabledOpacity
+                        >> MaterialColor.fromColor
+                    )
+                    Background.color
                 , Element.mouseDown []
                 , Element.mouseOver []
                 , Element.focused []
                 ]
             , ifActive =
-                [ palette.primary
-                    |> MaterialColor.withShade palette.on.primary MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteAttribute
+                    (\palette ->
+                        palette.primary
+                            |> MaterialColor.withShade palette.on.primary MaterialColor.buttonHoverOpacity
+                            |> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             , otherwise =
-                [ palette.surface
-                    |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
-                    |> MaterialColor.fromColor
-                    |> Background.color
+                [ withPaletteAttribute
+                    (\palette ->
+                        palette.surface
+                            |> MaterialColor.withShade palette.on.surface MaterialColor.buttonHoverOpacity
+                            |> MaterialColor.fromColor
+                    )
+                    Background.color
                 ]
             }
         }

@@ -7,16 +7,18 @@ module Internal.Material.List exposing
     , toggleRow
     )
 
-import Element
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
+import Element.WithContext.Font as Font
+import Internal.Context exposing (Context)
 import Internal.List exposing (ColumnStyle, RowStyle)
+import Internal.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 
 
-row : RowStyle msg
+row : RowStyle context Theme msg
 row =
     { elementRow =
         [ Element.paddingXY 0 8
@@ -32,7 +34,7 @@ row =
     }
 
 
-column : ColumnStyle msg
+column : ColumnStyle context Theme msg
 column =
     { elementColumn =
         [ Element.paddingXY 0 8
@@ -48,7 +50,7 @@ column =
     }
 
 
-toggleRow : RowStyle msg
+toggleRow : RowStyle context Theme msg
 toggleRow =
     { elementRow = []
     , content =
@@ -79,8 +81,8 @@ toggleRow =
     }
 
 
-cardColumn : Palette -> ColumnStyle msg
-cardColumn palette =
+cardColumn : ColumnStyle context Theme msg
+cardColumn =
     { elementColumn =
         [ Element.width <| Element.fill
         , Element.mouseOver <|
@@ -88,10 +90,11 @@ cardColumn palette =
         , Element.alignTop
         , Border.rounded 4
         , Border.width 1
-        , palette.on.surface
-            |> MaterialColor.scaleOpacity 0.14
-            |> MaterialColor.fromColor
-            |> Border.color
+        , withOnSurfaceAttribute
+            (MaterialColor.scaleOpacity 0.14
+                >> MaterialColor.fromColor
+            )
+            Border.color
         ]
     , content =
         { element =
@@ -99,17 +102,19 @@ cardColumn palette =
 
             -- HOTFIX FOR ISSUE #52
             --, Element.height <| Element.minimum 48 <| Element.shrink
-            , palette.surface
-                |> MaterialColor.fromColor
-                |> Background.color
-            , palette.surface
-                |> MaterialColor.accessibleTextColor
-                |> MaterialColor.fromColor
-                |> Font.color
-            , palette.on.surface
-                |> MaterialColor.scaleOpacity 0.14
-                |> MaterialColor.fromColor
-                |> Border.color
+            , withSurfaceAttribute
+                MaterialColor.fromColor
+                Background.color
+            , withSurfaceAttribute
+                (MaterialColor.accessibleTextColor
+                    >> MaterialColor.fromColor
+                )
+                Font.color
+            , withOnSurfaceAttribute
+                (MaterialColor.scaleOpacity 0.14
+                    >> MaterialColor.fromColor
+                )
+                Border.color
             , Element.width <| Element.minimum 344 <| Element.fill
             ]
         , ifSingleton =
@@ -139,23 +144,27 @@ cardColumn palette =
     }
 
 
-sideSheet : Palette -> ColumnStyle msg
-sideSheet palette =
+sideSheet : ColumnStyle context Theme msg
+sideSheet =
     { elementColumn =
-        (palette.surface |> MaterialColor.textAndBackground)
+        (getSurfaceColor |> MaterialColor.textAndBackground)
             ++ [ Element.width <| Element.maximum 360 <| Element.fill
                , Element.height <| Element.fill
                , Element.paddingXY 0 8
-               , Palette.gray palette
-                    |> MaterialColor.fromColor
-                    |> Border.color
+               , withPaletteAttribute
+                    (Palette.gray
+                        >> MaterialColor.fromColor
+                    )
+                    Border.color
                ]
     , content =
         { element =
             [ Element.width <| Element.fill
-            , Palette.gray palette
-                |> MaterialColor.fromColor
-                |> Border.color
+            , withPaletteAttribute
+                (Palette.gray
+                    >> MaterialColor.fromColor
+                )
+                Border.color
             ]
         , ifSingleton = []
         , ifFirst = []
@@ -165,10 +174,10 @@ sideSheet palette =
     }
 
 
-bottomSheet : Palette -> ColumnStyle msg
-bottomSheet palette =
+bottomSheet : ColumnStyle context Theme msg
+bottomSheet =
     { elementColumn =
-        (palette.surface |> MaterialColor.textAndBackground)
+        (getSurfaceColor |> MaterialColor.textAndBackground)
             ++ [ Element.height <| Element.fill
                , Element.width <| Element.maximum 360 <| Element.fill
                , Element.paddingXY 0 8

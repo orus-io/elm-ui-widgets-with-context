@@ -1,47 +1,48 @@
 module Internal.List exposing (ColumnStyle, RowStyle, buttonColumn, buttonRow, column, itemList, row, toggleRow, wrappedButtonRow)
 
-import Element exposing (Attribute, Element)
+import Element.WithContext as Element
 import Internal.Button exposing (Button, ButtonStyle)
+import Internal.Context exposing (Attribute, Context, Element)
 import Internal.Item as Item exposing (Item)
 import Internal.Select as Select
 import Widget.Customize as Customize
 
 
 {-| -}
-type alias RowStyle msg =
-    { elementRow : List (Attribute msg)
+type alias RowStyle context theme msg =
+    { elementRow : List (Attribute context theme msg)
     , content :
-        { element : List (Attribute msg)
-        , ifFirst : List (Attribute msg)
-        , ifLast : List (Attribute msg)
-        , ifSingleton : List (Attribute msg)
-        , otherwise : List (Attribute msg)
+        { element : List (Attribute context theme msg)
+        , ifFirst : List (Attribute context theme msg)
+        , ifLast : List (Attribute context theme msg)
+        , ifSingleton : List (Attribute context theme msg)
+        , otherwise : List (Attribute context theme msg)
         }
     }
 
 
 {-| -}
-type alias ColumnStyle msg =
-    { elementColumn : List (Attribute msg)
+type alias ColumnStyle context theme msg =
+    { elementColumn : List (Attribute context theme msg)
     , content :
-        { element : List (Attribute msg)
-        , ifFirst : List (Attribute msg)
-        , ifLast : List (Attribute msg)
-        , ifSingleton : List (Attribute msg)
-        , otherwise : List (Attribute msg)
+        { element : List (Attribute context theme msg)
+        , ifFirst : List (Attribute context theme msg)
+        , ifLast : List (Attribute context theme msg)
+        , ifSingleton : List (Attribute context theme msg)
+        , otherwise : List (Attribute context theme msg)
         }
     }
 
 
 internal :
-    { element : List (Attribute msg)
-    , ifFirst : List (Attribute msg)
-    , ifLast : List (Attribute msg)
-    , ifSingleton : List (Attribute msg)
-    , otherwise : List (Attribute msg)
+    { element : List (Attribute context theme msg)
+    , ifFirst : List (Attribute context theme msg)
+    , ifLast : List (Attribute context theme msg)
+    , ifSingleton : List (Attribute context theme msg)
+    , otherwise : List (Attribute context theme msg)
     }
-    -> List (Item msg)
-    -> List (Element msg)
+    -> List (Item context theme msg)
+    -> List (Element context theme msg)
 internal style list =
     list
         |> List.indexedMap
@@ -64,7 +65,7 @@ internal style list =
             )
 
 
-row : RowStyle msg -> List (Element msg) -> Element msg
+row : RowStyle context theme msg -> List (Element context theme msg) -> Element context theme msg
 row style =
     List.map
         (\a ->
@@ -78,7 +79,7 @@ row style =
         >> Element.row style.elementRow
 
 
-column : ColumnStyle msg -> List (Element msg) -> Element msg
+column : ColumnStyle context theme msg -> List (Element context theme msg) -> Element context theme msg
 column style =
     List.map
         (\a ->
@@ -91,7 +92,7 @@ column style =
         >> itemList style
 
 
-itemList : ColumnStyle msg -> List (Item msg) -> Element msg
+itemList : ColumnStyle context theme msg -> List (Item context theme msg) -> Element context theme msg
 itemList style =
     internal
         style.content
@@ -100,15 +101,15 @@ itemList style =
 
 
 internalButton :
-    { element : List (Attribute msg)
-    , ifSingleton : List (Attribute msg)
-    , ifFirst : List (Attribute msg)
-    , ifLast : List (Attribute msg)
-    , otherwise : List (Attribute msg)
-    , content : ButtonStyle msg
+    { element : List (Attribute context theme msg)
+    , ifSingleton : List (Attribute context theme msg)
+    , ifFirst : List (Attribute context theme msg)
+    , ifLast : List (Attribute context theme msg)
+    , otherwise : List (Attribute context theme msg)
+    , content : ButtonStyle context theme msg
     }
-    -> List ( Bool, Button msg )
-    -> List (Element msg)
+    -> List ( Bool, Button context theme msg )
+    -> List (Element context theme msg)
 internalButton style list =
     list
         |> List.indexedMap
@@ -135,11 +136,11 @@ internalButton style list =
 
 
 toggleRow :
-    { elementRow : RowStyle msg
-    , content : ButtonStyle msg
+    { elementRow : RowStyle context theme msg
+    , content : ButtonStyle context theme msg
     }
-    -> List ( Bool, Button msg )
-    -> Element msg
+    -> List ( Bool, Button context theme msg )
+    -> Element context theme msg
 toggleRow style list =
     (list
         |> List.indexedMap
@@ -168,11 +169,11 @@ toggleRow style list =
 
 
 buttonRow :
-    { elementRow : RowStyle msg
-    , content : ButtonStyle msg
+    { elementRow : RowStyle context theme msg
+    , content : ButtonStyle context theme msg
     }
-    -> List ( Bool, Button msg )
-    -> Element msg
+    -> List ( Bool, Button context theme msg )
+    -> Element context theme msg
 buttonRow style =
     internalButton
         { element =
@@ -191,11 +192,11 @@ buttonRow style =
 
 
 wrappedButtonRow :
-    { elementRow : RowStyle msg
-    , content : ButtonStyle msg
+    { elementRow : RowStyle context theme msg
+    , content : ButtonStyle context theme msg
     }
-    -> List ( Bool, Button msg )
-    -> Element msg
+    -> List ( Bool, Button context theme msg )
+    -> Element context theme msg
 wrappedButtonRow style =
     internalButton
         { element =
@@ -214,11 +215,11 @@ wrappedButtonRow style =
 
 
 buttonColumn :
-    { elementColumn : ColumnStyle msg
-    , content : ButtonStyle msg
+    { elementColumn : ColumnStyle context theme msg
+    , content : ButtonStyle context theme msg
     }
-    -> List ( Bool, Button msg )
-    -> Element msg
+    -> List ( Bool, Button context theme msg )
+    -> Element context theme msg
 buttonColumn style =
     internalButton
         { element =

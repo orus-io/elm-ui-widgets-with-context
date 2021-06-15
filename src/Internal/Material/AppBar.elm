@@ -1,12 +1,14 @@
 module Internal.Material.AppBar exposing (menuBar, tabBar)
 
-import Element exposing (Attribute)
-import Element.Background as Background
-import Element.Border as Border
-import Element.Font as Font
+import Element.WithContext as Element
+import Element.WithContext.Background as Background
+import Element.WithContext.Border as Border
+import Element.WithContext.Font as Font
 import Internal.AppBar exposing (AppBarStyle)
 import Internal.Button exposing (ButtonStyle)
+import Internal.Context exposing (Attribute)
 import Internal.Material.Button as Button
+import Internal.Material.Context exposing (..)
 import Internal.Material.Icon as Icon
 import Internal.Material.Palette as Palette exposing (Palette)
 import Internal.Material.TextInput as TextInput
@@ -16,8 +18,8 @@ import Widget.Material.Color as MaterialColor
 import Widget.Material.Typography as Typography
 
 
-menuTabButton : Palette -> ButtonStyle msg
-menuTabButton palette =
+menuTabButton : ButtonStyle context Theme msg
+menuTabButton =
     { elementButton =
         Typography.button
             ++ [ Element.height <| Element.px 56
@@ -26,35 +28,41 @@ menuTabButton palette =
                     |> Element.minimum 90
                     |> Element.width
                , Element.paddingXY 12 16
-               , palette.primary
-                    |> MaterialColor.accessibleTextColor
-                    |> MaterialColor.fromColor
-                    |> Font.color
+               , withPrimaryAttribute
+                    (MaterialColor.accessibleTextColor
+                        >> MaterialColor.fromColor
+                    )
+                    Font.color
                , Element.alignBottom
                , Element.mouseDown
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ withPrimaryDecoration
+                        (MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                            >> MaterialColor.fromColor
+                        )
+                        Background.color
                     ]
                , Element.focused
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ withPrimaryDecoration
+                        (MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                            >> MaterialColor.fromColor
+                        )
+                        Background.color
                     ]
                , Element.mouseOver
-                    [ palette.primary
-                        |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                        |> MaterialColor.fromColor
-                        |> Background.color
+                    [ withPrimaryDecoration
+                        (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                            >> MaterialColor.fromColor
+                        )
+                        Background.color
                     ]
                ]
     , ifDisabled =
-        (Button.baseButton palette |> .ifDisabled)
-            ++ [ Palette.gray palette
-                    |> MaterialColor.fromColor
-                    |> Font.color
+        (Button.baseButton |> .ifDisabled)
+            ++ [ withPaletteAttribute
+                    (Palette.gray
+                        >> MaterialColor.fromColor
+                    )
+                    Font.color
                , Element.mouseDown []
                , Element.mouseOver []
                , Element.focused []
@@ -80,15 +88,15 @@ menuTabButton palette =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = palette.primary |> MaterialColor.accessibleTextColor
+                    , color = .primary >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray palette
+                    , color = Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = palette.primary |> MaterialColor.accessibleTextColor
+                    , color = .primary >> MaterialColor.accessibleTextColor
                     }
                 }
             }
@@ -97,13 +105,13 @@ menuTabButton palette =
 
 
 menuBar :
-    Palette
-    ->
-        AppBarStyle
-            { menuIcon : Icon msg
-            , title : List (Attribute msg)
-            }
-            msg
+    AppBarStyle
+        { menuIcon : Icon context Theme msg
+        , title : List (Attribute context Theme msg)
+        }
+        context
+        Theme
+        msg
 menuBar =
     internalBar
         { menuIcon = Icon.menu
@@ -112,25 +120,24 @@ menuBar =
 
 
 tabBar :
-    Palette
-    ->
-        AppBarStyle
-            { menuTabButton : ButtonStyle msg
-            , title : List (Attribute msg)
-            }
-            msg
-tabBar palette =
+    AppBarStyle
+        { menuTabButton : ButtonStyle context Theme msg
+        , title : List (Attribute context Theme msg)
+        }
+        context
+        Theme
+        msg
+tabBar =
     internalBar
-        { menuTabButton = menuTabButton palette
+        { menuTabButton = menuTabButton
         , title = Typography.h6 ++ [ Element.paddingXY 8 0 ]
         }
-        palette
 
 
-internalBar : content -> Palette -> AppBarStyle content msg
-internalBar content palette =
+internalBar : content -> AppBarStyle content context Theme msg
+internalBar content =
     { elementRow =
-        (palette.primary
+        (getPrimaryColor
             |> MaterialColor.textAndBackground
         )
             ++ [ Element.padding 0
@@ -146,7 +153,7 @@ internalBar content palette =
                 ]
             , content = content
             }
-        , search = TextInput.searchInput palette
+        , search = TextInput.searchInput
         , actions =
             { elementRow =
                 [ Element.alignRight
@@ -154,7 +161,7 @@ internalBar content palette =
                 ]
             , content =
                 { button =
-                    Button.iconButton palette
+                    Button.iconButton
                         |> Customize.mapContent
                             (Customize.mapContent
                                 (\record ->
@@ -163,16 +170,16 @@ internalBar content palette =
                                             { ifActive =
                                                 { size = record.icon.ifActive.size
                                                 , color =
-                                                    palette.primary
-                                                        |> MaterialColor.accessibleTextColor
+                                                    .primary
+                                                        >> MaterialColor.accessibleTextColor
                                                 }
                                             , ifDisabled =
                                                 record.icon.ifDisabled
                                             , otherwise =
                                                 { size = record.icon.otherwise.size
                                                 , color =
-                                                    palette.primary
-                                                        |> MaterialColor.accessibleTextColor
+                                                    .primary
+                                                        >> MaterialColor.accessibleTextColor
                                                 }
                                             }
                                     }

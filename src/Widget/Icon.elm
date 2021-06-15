@@ -14,25 +14,36 @@ Just look for the function with the name of the package and copy&paste the respe
 -}
 
 import Color exposing (Color)
-import Element exposing (Element)
+import Element.WithContext as Element
 import Html exposing (Html)
+import Internal.Context exposing (Context, Element)
 import Svg exposing (Svg)
 import Svg.Attributes
 
 
 {-| -}
-type alias IconStyle =
+type alias IconStyle theme =
     { size : Int
-    , color : Color
+    , color : theme -> Color
     }
 
 
 {-| -}
-type alias Icon msg =
+type alias Icon context theme msg =
     { size : Int
-    , color : Color
+    , color : theme -> Color
     }
-    -> Element msg
+    -> Element context theme msg
+
+
+withIconStyle : ({ size : Int, color : Color } -> Element context theme msg) -> Icon context theme msg
+withIconStyle fun =
+    \{ size, color } ->
+        Element.with
+            (\{ theme } ->
+                fun { size = size, color = color theme }
+            )
+            identity
 
 
 {-| For using [icidasset/elm-material-icons](https://dark.elm.dmy.fr/packages/icidasset/elm-material-icons/latest/)
@@ -47,12 +58,13 @@ type alias Icon msg =
             |> Widget.Icon.elmMaterialIcons Color
 
 -}
-elmMaterialIcons : (Color -> coloring) -> (Int -> coloring -> Html msg) -> Icon msg
+elmMaterialIcons : (Color -> coloring) -> (Int -> coloring -> Html msg) -> Icon context theme msg
 elmMaterialIcons wrapper fun =
-    \{ size, color } ->
-        fun size (wrapper color)
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            fun size (wrapper color)
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [danmarcab/material-icons](https://dark.elm.dmy.fr/packages/danmarcab/material-icons/latest/)
@@ -66,17 +78,18 @@ elmMaterialIcons wrapper fun =
             |> Widget.Icon.materialIcons
 
 -}
-materialIcons : (Color -> Int -> Svg msg) -> Icon msg
+materialIcons : (Color -> Int -> Svg msg) -> Icon context theme msg
 materialIcons fun =
-    \{ size, color } ->
-        fun color size
-            |> List.singleton
-            |> Svg.svg
-                [ Svg.Attributes.width <| String.fromInt size
-                , Svg.Attributes.height <| String.fromInt size
-                ]
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            fun color size
+                |> List.singleton
+                |> Svg.svg
+                    [ Svg.Attributes.width <| String.fromInt size
+                    , Svg.Attributes.height <| String.fromInt size
+                    ]
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [feathericons/elm-feather](https://dark.elm.dmy.fr/packages/feathericons/elm-feather/latest/)
@@ -90,17 +103,18 @@ materialIcons fun =
             |> Widget.Icon.elmFeather FeatherIcons.toHtml
 
 -}
-elmFeather : (List (Svg.Attribute msg) -> icon -> Html msg) -> icon -> Icon msg
+elmFeather : (List (Svg.Attribute msg) -> icon -> Html msg) -> icon -> Icon context theme msg
 elmFeather fun icon =
-    \{ size, color } ->
-        icon
-            |> fun
-                [ Svg.Attributes.width <| String.fromInt size
-                , Svg.Attributes.height <| String.fromInt size
-                , Svg.Attributes.stroke <| Color.toCssString color
-                ]
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            icon
+                |> fun
+                    [ Svg.Attributes.width <| String.fromInt size
+                    , Svg.Attributes.height <| String.fromInt size
+                    , Svg.Attributes.stroke <| Color.toCssString color
+                    ]
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [lattyware/elm-fontawesome](https://dark.elm.dmy.fr/packages/lattyware/elm-fontawesome/latest)
@@ -116,20 +130,21 @@ elmFeather fun icon =
             |> Widget.Icon.elmFontawesome FontAwesome.Svg.viewIcon
 
 -}
-elmFontawesome : (icon -> Svg msg) -> icon -> Icon msg
+elmFontawesome : (icon -> Svg msg) -> icon -> Icon context theme msg
 elmFontawesome fun icon =
-    \{ size, color } ->
-        icon
-            |> fun
-            |> List.singleton
-            |> Svg.svg
-                [ Svg.Attributes.width <| String.fromInt size
-                , Svg.Attributes.height <| String.fromInt size
-                , Svg.Attributes.stroke <| Color.toCssString color
-                , Svg.Attributes.viewBox ("0 0 " ++ String.fromInt 512 ++ " " ++ String.fromInt 512)
-                ]
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            icon
+                |> fun
+                |> List.singleton
+                |> Svg.svg
+                    [ Svg.Attributes.width <| String.fromInt size
+                    , Svg.Attributes.height <| String.fromInt size
+                    , Svg.Attributes.stroke <| Color.toCssString color
+                    , Svg.Attributes.viewBox ("0 0 " ++ String.fromInt 512 ++ " " ++ String.fromInt 512)
+                    ]
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [j-panasiuk/elm-ionicons](https://dark.elm.dmy.fr/packages/j-panasiuk/elm-ionicons/latest/)
@@ -153,12 +168,13 @@ elmIonicons :
         }
      -> Html msg
     )
-    -> Icon msg
+    -> Icon context theme msg
 elmIonicons fun =
-    \{ size, color } ->
-        fun size (Color.toRgba color)
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            fun size (Color.toRgba color)
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [capitalist/elm-octicons](https://dark.elm.dmy.fr/packages/capitalist/elm-octicons/latest)
@@ -182,16 +198,17 @@ elmOcticons :
     , defaultOptions : options
     }
     -> (options -> Html msg)
-    -> Icon msg
+    -> Icon context theme msg
 elmOcticons { withSize, withColor, defaultOptions } fun =
-    \{ size, color } ->
-        (defaultOptions
-            |> withSize size
-            |> withColor (Color.toCssString color)
-        )
-            |> fun
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            (defaultOptions
+                |> withSize size
+                |> withColor (Color.toCssString color)
+            )
+                |> fun
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [jasonliang-dev/elm-heroicons](https://dark.elm.dmy.fr/packages/jasonliang-dev/elm-heroicons/latest)
@@ -205,16 +222,17 @@ elmOcticons { withSize, withColor, defaultOptions } fun =
             |> Widget.Icon.elmHeroicons
 
 -}
-elmHeroicons : (List (Svg.Attribute msg) -> Html msg) -> Icon msg
+elmHeroicons : (List (Svg.Attribute msg) -> Html msg) -> Icon context theme msg
 elmHeroicons fun =
-    \{ size, color } ->
-        fun
-            [ Svg.Attributes.width <| String.fromInt size
-            , Svg.Attributes.height <| String.fromInt size
-            , Svg.Attributes.stroke <| Color.toCssString color
-            ]
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            fun
+                [ Svg.Attributes.width <| String.fromInt size
+                , Svg.Attributes.height <| String.fromInt size
+                , Svg.Attributes.stroke <| Color.toCssString color
+                ]
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [lemol/ant-design-icons-elm](https://dark.elm.dmy.fr/packages/lemol/ant-design-icons-elm/latest)
@@ -228,16 +246,17 @@ elmHeroicons fun =
             |> Widget.Icon.antDesignIconsElm
 
 -}
-antDesignIconsElm : (List (Svg.Attribute msg) -> Html msg) -> Icon msg
+antDesignIconsElm : (List (Svg.Attribute msg) -> Html msg) -> Icon context theme msg
 antDesignIconsElm fun =
-    \{ size, color } ->
-        fun
-            [ Svg.Attributes.width <| String.fromInt size
-            , Svg.Attributes.height <| String.fromInt size
-            , Svg.Attributes.fill <| Color.toCssString color
-            ]
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            fun
+                [ Svg.Attributes.width <| String.fromInt size
+                , Svg.Attributes.height <| String.fromInt size
+                , Svg.Attributes.fill <| Color.toCssString color
+                ]
+                |> Element.html
+                |> Element.el []
 
 
 {-| For using [pehota/elm-zondicons](https://dark.elm.dmy.fr/packages/pehota/elm-zondicons/latest)
@@ -251,13 +270,14 @@ antDesignIconsElm fun =
             |> Widget.Icon.elmZondicons
 
 -}
-elmZondicons : (List (Svg.Attribute msg) -> Html msg) -> Icon msg
+elmZondicons : (List (Svg.Attribute msg) -> Html msg) -> Icon context theme msg
 elmZondicons fun =
-    \{ size, color } ->
-        fun
-            [ Svg.Attributes.width <| String.fromInt size
-            , Svg.Attributes.height <| String.fromInt size
-            , Svg.Attributes.stroke <| Color.toCssString color
-            ]
-            |> Element.html
-            |> Element.el []
+    withIconStyle <|
+        \{ size, color } ->
+            fun
+                [ Svg.Attributes.width <| String.fromInt size
+                , Svg.Attributes.height <| String.fromInt size
+                , Svg.Attributes.stroke <| Color.toCssString color
+                ]
+                |> Element.html
+                |> Element.el []
