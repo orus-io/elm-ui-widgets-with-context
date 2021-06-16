@@ -13,7 +13,7 @@ import Element.WithContext.Border as Border
 import Element.WithContext.Font as Font
 import Internal.Context exposing (Context)
 import Internal.List exposing (ColumnStyle, RowStyle)
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 

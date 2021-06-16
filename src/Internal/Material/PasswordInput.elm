@@ -3,7 +3,7 @@ module Internal.Material.PasswordInput exposing (passwordInput, passwordInputBas
 import Element.WithContext as Element
 import Element.WithContext.Border as Border
 import Internal.Context exposing (Context)
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Internal.PasswordInput exposing (PasswordInputStyle)
 import Widget.Material.Color as MaterialColor

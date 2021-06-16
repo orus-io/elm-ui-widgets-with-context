@@ -8,7 +8,7 @@ import Internal.AppBar exposing (AppBarStyle)
 import Internal.Button exposing (ButtonStyle)
 import Internal.Context exposing (Attribute)
 import Internal.Material.Button as Button
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Icon as Icon
 import Internal.Material.Palette as Palette exposing (Palette)
 import Internal.Material.TextInput as TextInput

@@ -3,7 +3,7 @@ module Internal.Material.ProgressIndicator exposing (determinateCircularIcon, in
 import Color
 import Element.WithContext as Element
 import Internal.Context exposing (Attribute, Element)
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Internal.ProgressIndicator exposing (ProgressIndicatorStyle)
 import Svg

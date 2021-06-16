@@ -146,7 +146,7 @@ import Internal.List exposing (ColumnStyle, RowStyle)
 import Internal.Material.AppBar as AppBar
 import Internal.Material.Button as Button
 import Internal.Material.Chip as Chip
-import Internal.Material.Context exposing (Theme)
+import Widget.Material.Context exposing (Theme)
 import Internal.Material.Dialog as Dialog
 import Internal.Material.Item as Item
 import Internal.Material.List as List

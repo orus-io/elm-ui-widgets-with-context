@@ -1,4 +1,4 @@
-module Internal.Material.Context exposing (..)
+module Widget.Material.Context exposing (..)
 
 import Element.WithContext as Element
 import Internal.Context exposing (Context)
@@ -56,6 +56,34 @@ withOnSurfaceDecoration fun =
 
 withOnSurfaceAttribute fun =
     withPaletteAttribute (.on >> .surface >> fun)
+
+
+getBackground =
+    .background
+
+
+withBackground fun =
+    withPalette (.background >> fun)
+
+
+withBackgroundAttribute fun =
+    withPaletteAttribute (.background >> fun)
+
+
+withBackgroundDecoration fun =
+    withPaletteDecoration (.background >> fun)
+
+
+withOnBackground fun =
+    withPalette (.on >> .background >> fun)
+
+
+withOnBackgroundAttribute fun =
+    withPaletteAttribute (.on >> .background >> fun)
+
+
+withOnBackgroundDecoration fun =
+    withPaletteDecoration (.on >> .background >> fun)
 
 
 getPrimaryColor =

@@ -23,6 +23,7 @@ module Widget exposing
     , PasswordInputStyle, PasswordInput, newPasswordInput, currentPasswordInput
     , TabStyle, Tab, tab
     , ProgressIndicatorStyle, ProgressIndicator, circularProgressIndicator
+    , Attribute, Element, Label, Placeholder
     )
 
 {-| This module contains different stateless view functions. No wiring required.
@@ -190,6 +191,10 @@ type alias Element context theme msg =
 
 type alias Placeholder context theme msg =
     Input.Placeholder (Context context theme) msg
+
+
+type alias Label context theme msg =
+    Input.Label (Context context theme) msg
 
 
 

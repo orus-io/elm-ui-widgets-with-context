@@ -6,7 +6,7 @@ import Element.WithContext.Border as Border
 import Internal.Context exposing (Context)
 import Internal.Dialog exposing (DialogStyle)
 import Internal.Material.Button as Button
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 import Widget.Material.Typography as Typography

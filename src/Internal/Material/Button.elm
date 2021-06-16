@@ -6,7 +6,7 @@ import Element.WithContext.Border as Border
 import Element.WithContext.Font as Font
 import Html.Attributes as Attributes
 import Internal.Button exposing (ButtonStyle)
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 import Widget.Material.Typography as Typography

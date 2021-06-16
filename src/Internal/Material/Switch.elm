@@ -5,7 +5,7 @@ import Element.WithContext as Element
 import Element.WithContext.Background as Background
 import Element.WithContext.Border as Border
 import Html.Attributes as Attributes
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Internal.Switch exposing (SwitchStyle)
 import Widget.Material.Color as MaterialColor

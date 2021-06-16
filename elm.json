@@ -1,34 +1,35 @@
 {
-    "type": "package",
-    "name": "orus-io/elm-ui-widgets-with-context",
-    "summary": "A elm-ui-widgets friendly fork based on elm-ui-with-context.",
-    "license": "BSD-3-Clause",
-    "version": "1.0.0",
-    "exposed-modules": [
-        "Widget",
-        "Widget.Material",
-        "Widget.Material.Typography",
-        "Widget.Material.Color",
-        "Widget.Customize",
-        "Widget.Layout",
-        "Widget.Snackbar",
-        "Widget.Icon"
-    ],
-    "elm-version": "0.19.0 <= v < 0.20.0",
-    "dependencies": {
-        "avh4/elm-color": "1.0.0 <= v < 2.0.0",
-        "elm/browser": "1.0.2 <= v < 2.0.0",
-        "elm/core": "1.0.2 <= v < 2.0.0",
-        "elm/html": "1.0.0 <= v < 2.0.0",
-        "elm/svg": "1.0.1 <= v < 2.0.0",
-        "elm-community/intdict": "3.0.0 <= v < 4.0.0",
-        "mdgriffith/elm-ui": "1.1.7 <= v < 2.0.0",
-        "miniBill/elm-ui-with-context": "1.1.0 <= v < 2.0.0",
-        "noahzgordon/elm-color-extra": "1.0.2 <= v < 2.0.0",
-        "turboMaCk/queue": "1.0.2 <= v < 2.0.0"
-    },
-    "test-dependencies": {
-        "elm-explorations/test": "1.2.1 <= v < 2.0.0",
-        "icidasset/elm-material-icons": "5.0.0 <= v < 6.0.0"
-    }
+  "type": "package",
+  "name": "orus-io/elm-ui-widgets-with-context",
+  "summary": "A elm-ui-widgets friendly fork based on elm-ui-with-context.",
+  "license": "BSD-3-Clause",
+  "version": "1.0.0",
+  "exposed-modules": [
+    "Widget",
+    "Widget.Material",
+    "Widget.Material.Context",
+    "Widget.Material.Typography",
+    "Widget.Material.Color",
+    "Widget.Customize",
+    "Widget.Layout",
+    "Widget.Snackbar",
+    "Widget.Icon"
+  ],
+  "elm-version": "0.19.0 <= v < 0.20.0",
+  "dependencies": {
+    "avh4/elm-color": "1.0.0 <= v < 2.0.0",
+    "elm/browser": "1.0.2 <= v < 2.0.0",
+    "elm/core": "1.0.2 <= v < 2.0.0",
+    "elm/html": "1.0.0 <= v < 2.0.0",
+    "elm/svg": "1.0.1 <= v < 2.0.0",
+    "elm-community/intdict": "3.0.0 <= v < 4.0.0",
+    "mdgriffith/elm-ui": "1.1.7 <= v < 2.0.0",
+    "miniBill/elm-ui-with-context": "1.1.0 <= v < 2.0.0",
+    "noahzgordon/elm-color-extra": "1.0.2 <= v < 2.0.0",
+    "turboMaCk/queue": "1.0.2 <= v < 2.0.0"
+  },
+  "test-dependencies": {
+    "elm-explorations/test": "1.2.1 <= v < 2.0.0",
+    "icidasset/elm-material-icons": "5.0.0 <= v < 6.0.0"
+  }
 }

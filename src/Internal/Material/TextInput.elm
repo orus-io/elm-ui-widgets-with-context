@@ -4,7 +4,7 @@ import Element.WithContext as Element
 import Element.WithContext.Border as Border
 import Internal.Context exposing (Context)
 import Internal.Material.Chip as Chip
-import Internal.Material.Context exposing (..)
+import Widget.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Internal.TextInput exposing (TextInputStyle)
 import Widget.Customize as Customize
