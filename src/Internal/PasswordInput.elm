@@ -11,19 +11,19 @@ import Internal.Context exposing (Attribute, Element, Label, Placeholder)
 
 
 {-| -}
-type alias PasswordInputStyle context theme msg =
-    { elementRow : List (Attribute context theme msg)
+type alias PasswordInputStyle context msg =
+    { elementRow : List (Attribute context msg)
     , content :
         { password :
-            { elementPasswordInput : List (Attribute context theme msg)
+            { elementPasswordInput : List (Attribute context msg)
             }
         }
     }
 
 
-type alias PasswordInput context theme msg =
+type alias PasswordInput context msg =
     { text : String
-    , placeholder : Maybe (Placeholder context theme msg)
+    , placeholder : Maybe (Placeholder context msg)
     , label : String
     , onChange : String -> msg
     , show : Bool
@@ -31,19 +31,19 @@ type alias PasswordInput context theme msg =
 
 
 password :
-    (List (Attribute context theme msg)
+    (List (Attribute context msg)
      ->
         { onChange : String -> msg
         , text : String
-        , placeholder : Maybe (Placeholder context theme msg)
-        , label : Label context theme msg
+        , placeholder : Maybe (Placeholder context msg)
+        , label : Label context msg
         , show : Bool
         }
-     -> Element context theme msg
+     -> Element context msg
     )
-    -> PasswordInputStyle context theme msg
-    -> PasswordInput context theme msg
-    -> Element context theme msg
+    -> PasswordInputStyle context msg
+    -> PasswordInput context msg
+    -> Element context msg
 password input style { placeholder, label, text, onChange, show } =
     Element.row style.elementRow
         [ input style.content.password.elementPasswordInput
@@ -56,11 +56,11 @@ password input style { placeholder, label, text, onChange, show } =
         ]
 
 
-currentPasswordInput : PasswordInputStyle context theme msg -> PasswordInput context theme msg -> Element context theme msg
+currentPasswordInput : PasswordInputStyle context msg -> PasswordInput context msg -> Element context msg
 currentPasswordInput =
     password Input.currentPassword
 
 
-newPasswordInput : PasswordInputStyle context theme msg -> PasswordInput context theme msg -> Element context theme msg
+newPasswordInput : PasswordInputStyle context msg -> PasswordInput context msg -> Element context msg
 newPasswordInput =
     password Input.newPassword

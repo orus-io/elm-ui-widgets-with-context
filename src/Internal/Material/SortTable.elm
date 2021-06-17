@@ -6,9 +6,10 @@ import Internal.Material.Button as Button
 import Internal.Material.Icon as Icon
 import Internal.Material.Palette exposing (Palette)
 import Internal.SortTable exposing (SortTableStyle)
+import Widget.Material.Context exposing (Context)
 
 
-sortTable : SortTableStyle context Palette msg
+sortTable : SortTableStyle (Context context) msg
 sortTable =
     { elementTable = []
     , content =

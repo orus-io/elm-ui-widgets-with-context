@@ -26,13 +26,13 @@ import Queue exposing (Queue)
 
 
 {-| -}
-type alias SnackbarStyle context theme msg =
-    { elementRow : List (Attribute context theme msg)
+type alias SnackbarStyle context msg =
+    { elementRow : List (Attribute context msg)
     , content :
         { text :
-            { elementText : List (Attribute context theme msg)
+            { elementText : List (Attribute context msg)
             }
-        , button : ButtonStyle context theme msg
+        , button : ButtonStyle context msg
         }
     }
 
@@ -122,10 +122,10 @@ current model =
 {-| Views the current Message. (only one at a time)
 -}
 view :
-    SnackbarStyle context theme msg
+    SnackbarStyle context msg
     -> (a -> Message msg)
     -> Snackbar a
-    -> Maybe (Element context theme msg)
+    -> Maybe (Element context msg)
 view style toMessage model =
     model
         |> current

@@ -7,30 +7,30 @@ import Internal.Context exposing (Attribute, Element, Placeholder)
 
 
 {-| -}
-type alias TextInputStyle context theme msg =
-    { elementRow : List (Attribute context theme msg)
+type alias TextInputStyle context msg =
+    { elementRow : List (Attribute context msg)
     , content :
         { chips :
-            { elementRow : List (Attribute context theme msg)
-            , content : ButtonStyle context theme msg
+            { elementRow : List (Attribute context msg)
+            , content : ButtonStyle context msg
             }
         , text :
-            { elementTextInput : List (Attribute context theme msg)
+            { elementTextInput : List (Attribute context msg)
             }
         }
     }
 
 
-type alias TextInput context theme msg =
-    { chips : List (Button context theme msg)
+type alias TextInput context msg =
+    { chips : List (Button context msg)
     , text : String
-    , placeholder : Maybe (Placeholder context theme msg)
+    , placeholder : Maybe (Placeholder context msg)
     , label : String
     , onChange : String -> msg
     }
 
 
-textInput : TextInputStyle context theme msg -> TextInput context theme msg -> Element context theme msg
+textInput : TextInputStyle context msg -> TextInput context msg -> Element context msg
 textInput style { chips, placeholder, label, text, onChange } =
     Element.row style.elementRow
         [ if chips |> List.isEmpty then

@@ -5,25 +5,23 @@ import Internal.Context exposing (Context)
 import Internal.Material.Palette exposing (Palette)
 
 
-type alias Theme =
-    Palette
-
-
-wrap : (Palette -> style) -> Context context Palette -> style
-wrap fn { theme } =
-    fn theme
+type alias Context context =
+    { context
+        | device : Element.Device
+        , material : Palette
+    }
 
 
 withPalette fun =
-    Element.with (\{ theme } -> fun theme)
+    Element.with (\{ material } -> fun material)
 
 
 withPaletteDecoration fun =
-    Element.withDecoration (\{ theme } -> fun theme)
+    Element.withDecoration (\{ material } -> fun material)
 
 
 withPaletteAttribute fun =
-    Element.withAttribute (\{ theme } -> fun theme)
+    Element.withAttribute (\{ material } -> fun material)
 
 
 withPrimaryDecoration fun =
@@ -58,10 +56,6 @@ withOnSurfaceAttribute fun =
     withPaletteAttribute (.on >> .surface >> fun)
 
 
-getBackground =
-    .background
-
-
 withBackground fun =
     withPalette (.background >> fun)
 
@@ -86,9 +80,18 @@ withOnBackgroundDecoration fun =
     withPaletteDecoration (.on >> .background >> fun)
 
 
+getPalette : Context context -> Palette
+getPalette =
+    .material
+
+
+getBackground =
+    getPalette >> .background
+
+
 getPrimaryColor =
-    .theme >> .primary
+    getPalette >> .primary
 
 
 getSurfaceColor =
-    .theme >> .surface
+    getPalette >> .surface

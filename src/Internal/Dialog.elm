@@ -7,20 +7,20 @@ import Internal.Modal exposing (Modal)
 
 
 {-| -}
-type alias DialogStyle context theme msg =
-    { elementColumn : List (Attribute context theme msg)
+type alias DialogStyle context msg =
+    { elementColumn : List (Attribute context msg)
     , content :
         { title :
-            { contentText : List (Attribute context theme msg)
+            { contentText : List (Attribute context msg)
             }
         , text :
-            { contentText : List (Attribute context theme msg)
+            { contentText : List (Attribute context msg)
             }
         , buttons :
-            { elementRow : List (Attribute context theme msg)
+            { elementRow : List (Attribute context msg)
             , content :
-                { accept : ButtonStyle context theme msg
-                , dismiss : ButtonStyle context theme msg
+                { accept : ButtonStyle context msg
+                , dismiss : ButtonStyle context msg
                 }
             }
         }
@@ -36,9 +36,9 @@ type alias Dialog msg =
 
 
 dialog :
-    DialogStyle context theme msg
+    DialogStyle context msg
     -> Dialog msg
-    -> Modal context theme msg
+    -> Modal context msg
 dialog style { title, text, accept, dismiss } =
     { onDismiss =
         case ( accept, dismiss ) of

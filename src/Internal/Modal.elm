@@ -6,13 +6,13 @@ import Element.WithContext.Events as Events
 import Internal.Context exposing (Attribute, Element)
 
 
-type alias Modal context theme msg =
+type alias Modal context msg =
     { onDismiss : Maybe msg
-    , content : Element context theme msg
+    , content : Element context msg
     }
 
 
-background : Maybe msg -> List (Attribute context theme msg)
+background : Maybe msg -> List (Attribute context msg)
 background onDismiss =
     [ Element.none
         |> Element.el
@@ -30,7 +30,7 @@ background onDismiss =
     ]
 
 
-singleModal : List (Modal context theme msg) -> List (Attribute context theme msg)
+singleModal : List (Modal context msg) -> List (Attribute context msg)
 singleModal =
     List.head
         >> Maybe.map
@@ -40,7 +40,7 @@ singleModal =
         >> Maybe.withDefault []
 
 
-multiModal : List (Modal context theme msg) -> List (Attribute context theme msg)
+multiModal : List (Modal context msg) -> List (Attribute context msg)
 multiModal list =
     case list of
         head :: tail ->

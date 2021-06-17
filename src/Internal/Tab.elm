@@ -7,25 +7,25 @@ import Internal.Select as Select exposing (Select)
 
 
 {-| -}
-type alias TabStyle context theme msg =
-    { elementColumn : List (Attribute context theme msg)
+type alias TabStyle context msg =
+    { elementColumn : List (Attribute context msg)
     , content :
         { tabs :
-            { elementRow : List (Attribute context theme msg)
-            , content : ButtonStyle context theme msg
+            { elementRow : List (Attribute context msg)
+            , content : ButtonStyle context msg
             }
-        , content : List (Attribute context theme msg)
+        , content : List (Attribute context msg)
         }
     }
 
 
-type alias Tab context theme msg =
-    { tabs : Select context theme msg
-    , content : Maybe Int -> Element context theme msg
+type alias Tab context msg =
+    { tabs : Select context msg
+    , content : Maybe Int -> Element context msg
     }
 
 
-tab : TabStyle context theme msg -> Tab context theme msg -> Element context theme msg
+tab : TabStyle context msg -> Tab context msg -> Element context msg
 tab style { tabs, content } =
     [ tabs
         |> Select.select

@@ -2,14 +2,13 @@ module Internal.Material.PasswordInput exposing (passwordInput, passwordInputBas
 
 import Element.WithContext as Element
 import Element.WithContext.Border as Border
-import Internal.Context exposing (Context)
-import Widget.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Internal.PasswordInput exposing (PasswordInputStyle)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 
 
-passwordInput : PasswordInputStyle context Palette msg
+passwordInput : PasswordInputStyle (Context context) msg
 passwordInput =
     { elementRow =
         (getSurfaceColor
@@ -49,7 +48,7 @@ passwordInput =
     }
 
 
-passwordInputBase : PasswordInputStyle context Palette msg
+passwordInputBase : PasswordInputStyle (Context context) msg
 passwordInputBase =
     { elementRow =
         getSurfaceColor

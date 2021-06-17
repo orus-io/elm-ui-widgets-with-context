@@ -10,7 +10,7 @@ import Svg
 import Svg.Attributes
 
 
-indeterminateCircularIcon : (Palette -> Color.Color) -> List (Attribute context Theme msg) -> Element context Theme msg
+indeterminateCircularIcon : (Palette -> Color.Color) -> List (Attribute (Context context) msg) -> Element (Context context) msg
 indeterminateCircularIcon color attribs =
     -- Based on example at https://codepen.io/FezVrasta/pen/oXrgdR
     withPalette
@@ -70,7 +70,7 @@ indeterminateCircularIcon color attribs =
         (Element.el attribs)
 
 
-determinateCircularIcon : (Palette -> Color.Color) -> List (Attribute context Theme msg) -> Float -> Element context Theme msg
+determinateCircularIcon : (Palette -> Color.Color) -> List (Attribute (Context context) msg) -> Float -> Element (Context context) msg
 determinateCircularIcon color attribs progress =
     -- With help from https://css-tricks.com/building-progress-ring-quickly/
     let
@@ -115,7 +115,7 @@ determinateCircularIcon color attribs progress =
 
 {-| A circular progress indicator
 -}
-progressIndicator : ProgressIndicatorStyle context Theme msg
+progressIndicator : ProgressIndicatorStyle (Context context) msg
 progressIndicator =
     { elementFunction =
         \maybeProgress ->

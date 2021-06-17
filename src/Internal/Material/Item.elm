@@ -18,17 +18,16 @@ import Element.WithContext.Border as Border
 import Element.WithContext.Font as Font
 import Html.Attributes as Attributes
 import Internal.Button exposing (ButtonStyle)
-import Internal.Context exposing (Context)
 import Internal.Item exposing (DividerStyle, ExpansionItemStyle, FullBleedItemStyle, HeaderStyle, ImageItemStyle, InsetItemStyle, ItemStyle, MultiLineItemStyle)
 import Internal.Material.Button as Button
-import Widget.Material.Context exposing (..)
 import Internal.Material.Icon as Icon
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 import Widget.Material.Typography as Typography
 
 
-fullBleedDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+fullBleedDivider : ItemStyle (DividerStyle (Context context) msg) (Context context) msg
 fullBleedDivider =
     { element =
         [ Element.width <| Element.fill
@@ -50,7 +49,7 @@ fullBleedDivider =
     }
 
 
-insetDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+insetDivider : ItemStyle (DividerStyle (Context context) msg) (Context context) msg
 insetDivider =
     { element =
         [ Element.width <| Element.fill
@@ -77,7 +76,7 @@ insetDivider =
     }
 
 
-middleDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+middleDivider : ItemStyle (DividerStyle (Context context) msg) (Context context) msg
 middleDivider =
     { element =
         [ Element.width <| Element.fill
@@ -104,7 +103,7 @@ middleDivider =
     }
 
 
-insetHeader : ItemStyle (HeaderStyle context Theme msg) context Theme msg
+insetHeader : ItemStyle (HeaderStyle (Context context) msg) (Context context) msg
 insetHeader =
     { element =
         [ Element.width <| Element.fill
@@ -139,7 +138,7 @@ insetHeader =
     }
 
 
-fullBleedHeader : ItemStyle (HeaderStyle context Theme msg) context Theme msg
+fullBleedHeader : ItemStyle (HeaderStyle (Context context) msg) (Context context) msg
 fullBleedHeader =
     { element =
         [ Element.width <| Element.fill
@@ -178,7 +177,7 @@ fullBleedHeader =
     }
 
 
-fullBleedItem : ItemStyle (FullBleedItemStyle context Theme msg) context Theme msg
+fullBleedItem : ItemStyle (FullBleedItemStyle (Context context) msg) (Context context) msg
 fullBleedItem =
     let
         i =
@@ -200,7 +199,7 @@ fullBleedItem =
     }
 
 
-insetItem : ItemStyle (InsetItemStyle context Theme msg) context Theme msg
+insetItem : ItemStyle (InsetItemStyle (Context context) msg) (Context context) msg
 insetItem =
     { element = [ Element.padding 0 ]
     , content =
@@ -251,12 +250,12 @@ insetItem =
                         ]
                     , content =
                         { size = 24
-                        , color = Palette.gray
+                        , color = getPalette >> Palette.gray
                         }
                     }
                 , content =
                     { size = 24
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 }
             }
@@ -264,7 +263,7 @@ insetItem =
     }
 
 
-multiLineItem : ItemStyle (MultiLineItemStyle context Theme msg) context Theme msg
+multiLineItem : ItemStyle (MultiLineItemStyle (Context context) msg) (Context context) msg
 multiLineItem =
     { element = [ Element.padding 0 ]
     , content =
@@ -333,12 +332,12 @@ multiLineItem =
                         ]
                     , content =
                         { size = 24
-                        , color = Palette.textGray
+                        , color = getPalette >> Palette.textGray
                         }
                     }
                 , content =
                     { size = 24
-                    , color = Palette.textGray
+                    , color = getPalette >> Palette.textGray
                     }
                 }
             }
@@ -346,7 +345,7 @@ multiLineItem =
     }
 
 
-imageItem : ItemStyle (ImageItemStyle context Theme msg) context Theme msg
+imageItem : ItemStyle (ImageItemStyle (Context context) msg) (Context context) msg
 imageItem =
     { element = [ Element.padding 0 ]
     , content =
@@ -402,7 +401,7 @@ imageItem =
                     }
                 , content =
                     { size = 24
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 }
             }
@@ -410,7 +409,7 @@ imageItem =
     }
 
 
-expansionItem : ExpansionItemStyle context Theme msg
+expansionItem : ExpansionItemStyle (Context context) msg
 expansionItem =
     { item = insetItem
     , expandIcon = Icon.expand_more
@@ -418,7 +417,7 @@ expansionItem =
     }
 
 
-selectItem : ItemStyle (ButtonStyle context Theme msg) context Theme msg
+selectItem : ItemStyle (ButtonStyle (Context context) msg) (Context context) msg
 selectItem =
     { element = [ Element.paddingXY 8 4 ]
     , content =
@@ -493,15 +492,15 @@ selectItem =
                 , icon =
                     { ifActive =
                         { size = 18
-                        , color = .surface >> MaterialColor.accessibleTextColor
+                        , color = getSurfaceColor >> MaterialColor.accessibleTextColor
                         }
                     , ifDisabled =
                         { size = 18
-                        , color = Palette.gray
+                        , color = getPalette >> Palette.gray
                         }
                     , otherwise =
                         { size = 18
-                        , color = .surface >> MaterialColor.accessibleTextColor
+                        , color = getSurfaceColor >> MaterialColor.accessibleTextColor
                         }
                     }
                 }

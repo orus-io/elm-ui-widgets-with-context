@@ -1,21 +1,21 @@
 module Internal.Material.Icon exposing (expand_less, expand_more, icon, menu, more_vert, search)
 
 import Color exposing (Color)
-import Element.WithContext as Element
-import Internal.Context exposing (Element)
+import Element.WithContext as Element exposing (Element)
 import Svg exposing (Svg)
 import Svg.Attributes
 import Widget.Icon exposing (Icon)
+import Widget.Material.Context exposing (Context)
 
 
-icon : { viewBox : String, size : Int, color : theme -> Color } -> List (Svg msg) -> Element context theme msg
+icon : { viewBox : String, size : Int, color : Context context -> Color } -> List (Svg msg) -> Element (Context context) msg
 icon { viewBox, size, color } svgElements =
     Element.with
-        (\{ theme } ->
+        (\context ->
             Svg.svg
                 [ Svg.Attributes.height <| String.fromInt size
-                , Svg.Attributes.stroke <| Color.toCssString <| color theme
-                , Svg.Attributes.fill <| Color.toCssString <| color theme
+                , Svg.Attributes.stroke <| Color.toCssString <| color context
+                , Svg.Attributes.fill <| Color.toCssString <| color context
 
                 --, Svg.Attributes.strokeLinecap "round"
                 --, Svg.Attributes.strokeLinejoin "round"
@@ -29,7 +29,7 @@ icon { viewBox, size, color } svgElements =
         (Element.el [])
 
 
-menu : Icon context theme msg
+menu : Icon (Context context) msg
 menu { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -43,7 +43,7 @@ menu { size, color } =
         ]
 
 
-more_vert : Icon context theme msg
+more_vert : Icon (Context context) msg
 more_vert { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -57,7 +57,7 @@ more_vert { size, color } =
         ]
 
 
-search : Icon context theme msg
+search : Icon (Context context) msg
 search { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -71,7 +71,7 @@ search { size, color } =
         ]
 
 
-expand_less : Icon context theme msg
+expand_less : Icon (Context context) msg
 expand_less { size, color } =
     icon
         { viewBox = "0 0 48 48"
@@ -85,7 +85,7 @@ expand_less { size, color } =
         ]
 
 
-expand_more : Icon context theme msg
+expand_more : Icon (Context context) msg
 expand_more { size, color } =
     icon
         { viewBox = "0 0 48 48"

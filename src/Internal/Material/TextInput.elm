@@ -2,16 +2,15 @@ module Internal.Material.TextInput exposing (searchInput, textInput, textInputBa
 
 import Element.WithContext as Element
 import Element.WithContext.Border as Border
-import Internal.Context exposing (Context)
 import Internal.Material.Chip as Chip
-import Widget.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Internal.TextInput exposing (TextInputStyle)
 import Widget.Customize as Customize
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 
 
-textInput : TextInputStyle context Theme msg
+textInput : TextInputStyle (Context context) msg
 textInput =
     { elementRow =
         (getSurfaceColor
@@ -55,7 +54,7 @@ textInput =
     }
 
 
-searchInput : TextInputStyle context Theme msg
+searchInput : TextInputStyle (Context context) msg
 searchInput =
     textInputBase
         |> Customize.mapElementRow
@@ -80,7 +79,7 @@ searchInput =
             )
 
 
-textInputBase : TextInputStyle context Theme msg
+textInputBase : TextInputStyle (Context context) msg
 textInputBase =
     { elementRow =
         getSurfaceColor

@@ -7,24 +7,24 @@ import Internal.Context exposing (Attribute, Element)
 
 
 {-| -}
-type alias SwitchStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
+type alias SwitchStyle context msg =
+    { elementButton : List (Attribute context msg)
     , content :
-        { element : List (Attribute context theme msg)
-        , ifDisabled : List (Attribute context theme msg)
-        , ifActive : List (Attribute context theme msg)
-        , otherwise : List (Attribute context theme msg)
+        { element : List (Attribute context msg)
+        , ifDisabled : List (Attribute context msg)
+        , ifActive : List (Attribute context msg)
+        , otherwise : List (Attribute context msg)
         }
     , contentInFront :
-        { element : List (Attribute context theme msg)
-        , ifDisabled : List (Attribute context theme msg)
-        , ifActive : List (Attribute context theme msg)
-        , otherwise : List (Attribute context theme msg)
+        { element : List (Attribute context msg)
+        , ifDisabled : List (Attribute context msg)
+        , ifActive : List (Attribute context msg)
+        , otherwise : List (Attribute context msg)
         , content :
-            { element : List (Attribute context theme msg)
-            , ifDisabled : List (Attribute context theme msg)
-            , ifActive : List (Attribute context theme msg)
-            , otherwise : List (Attribute context theme msg)
+            { element : List (Attribute context msg)
+            , ifDisabled : List (Attribute context msg)
+            , ifActive : List (Attribute context msg)
+            , otherwise : List (Attribute context msg)
             }
         }
     }
@@ -37,7 +37,7 @@ type alias Switch msg =
     }
 
 
-switch : SwitchStyle context theme msg -> Switch msg -> Element context theme msg
+switch : SwitchStyle context msg -> Switch msg -> Element context msg
 switch style { onPress, description, active } =
     Input.button
         (style.elementButton

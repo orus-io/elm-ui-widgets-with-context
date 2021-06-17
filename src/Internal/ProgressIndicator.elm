@@ -4,14 +4,14 @@ import Internal.Context exposing (Element)
 
 
 {-| -}
-type alias ProgressIndicatorStyle context theme msg =
-    { elementFunction : Maybe Float -> Element context theme msg
+type alias ProgressIndicatorStyle context msg =
+    { elementFunction : Maybe Float -> Element context msg
     }
 
 
 circularProgressIndicator :
-    ProgressIndicatorStyle context theme msg
+    ProgressIndicatorStyle context msg
     -> Maybe Float
-    -> Element context theme msg
+    -> Element context msg
 circularProgressIndicator style maybeProgress =
     style.elementFunction maybeProgress

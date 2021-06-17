@@ -9,32 +9,32 @@ import Set exposing (Set)
 import Widget.Icon exposing (Icon)
 
 
-type alias Select context theme msg =
+type alias Select context msg =
     { selected : Maybe Int
     , options :
         List
             { text : String
-            , icon : Icon context theme msg
+            , icon : Icon context msg
             }
     , onSelect : Int -> Maybe msg
     }
 
 
-type alias MultiSelect context theme msg =
+type alias MultiSelect context msg =
     { selected : Set Int
     , options :
         List
             { text : String
-            , icon : Icon context theme msg
+            , icon : Icon context msg
             }
     , onSelect : Int -> Maybe msg
     }
 
 
 selectButton :
-    ButtonStyle context theme msg
-    -> ( Bool, Button context theme msg )
-    -> Element context theme msg
+    ButtonStyle context msg
+    -> ( Bool, Button context msg )
+    -> Element context msg
 selectButton style ( selected, b ) =
     Input.button
         (style.elementButton
@@ -68,9 +68,9 @@ selectButton style ( selected, b ) =
 
 
 toggleButton :
-    ButtonStyle context theme msg
-    -> ( Bool, Button context theme msg )
-    -> Element context theme msg
+    ButtonStyle context msg
+    -> ( Bool, Button context msg )
+    -> Element context msg
 toggleButton style ( selected, b ) =
     Input.button
         (style.elementButton
@@ -102,8 +102,8 @@ toggleButton style ( selected, b ) =
 
 
 select :
-    Select context theme msg
-    -> List ( Bool, Button context theme msg )
+    Select context msg
+    -> List ( Bool, Button context msg )
 select { selected, options, onSelect } =
     options
         |> List.indexedMap
@@ -118,8 +118,8 @@ select { selected, options, onSelect } =
 
 
 multiSelect :
-    MultiSelect context theme msg
-    -> List ( Bool, Button context theme msg )
+    MultiSelect context msg
+    -> List ( Bool, Button context msg )
 multiSelect { selected, options, onSelect } =
     options
         |> List.indexedMap

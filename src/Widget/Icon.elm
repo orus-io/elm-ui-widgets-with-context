@@ -22,26 +22,26 @@ import Svg.Attributes
 
 
 {-| -}
-type alias IconStyle theme =
+type alias IconStyle context =
     { size : Int
-    , color : theme -> Color
+    , color : Context context -> Color
     }
 
 
 {-| -}
-type alias Icon context theme msg =
+type alias Icon context msg =
     { size : Int
-    , color : theme -> Color
+    , color : Context context -> Color
     }
-    -> Element context theme msg
+    -> Element context msg
 
 
-withIconStyle : ({ size : Int, color : Color } -> Element context theme msg) -> Icon context theme msg
+withIconStyle : ({ size : Int, color : Color } -> Element context msg) -> Icon context msg
 withIconStyle fun =
     \{ size, color } ->
         Element.with
-            (\{ theme } ->
-                fun { size = size, color = color theme }
+            (\context ->
+                fun { size = size, color = color context }
             )
             identity
 
@@ -58,7 +58,7 @@ withIconStyle fun =
             |> Widget.Icon.elmMaterialIcons Color
 
 -}
-elmMaterialIcons : (Color -> coloring) -> (Int -> coloring -> Html msg) -> Icon context theme msg
+elmMaterialIcons : (Color -> coloring) -> (Int -> coloring -> Html msg) -> Icon context msg
 elmMaterialIcons wrapper fun =
     withIconStyle <|
         \{ size, color } ->
@@ -78,7 +78,7 @@ elmMaterialIcons wrapper fun =
             |> Widget.Icon.materialIcons
 
 -}
-materialIcons : (Color -> Int -> Svg msg) -> Icon context theme msg
+materialIcons : (Color -> Int -> Svg msg) -> Icon context msg
 materialIcons fun =
     withIconStyle <|
         \{ size, color } ->
@@ -103,7 +103,7 @@ materialIcons fun =
             |> Widget.Icon.elmFeather FeatherIcons.toHtml
 
 -}
-elmFeather : (List (Svg.Attribute msg) -> icon -> Html msg) -> icon -> Icon context theme msg
+elmFeather : (List (Svg.Attribute msg) -> icon -> Html msg) -> icon -> Icon context msg
 elmFeather fun icon =
     withIconStyle <|
         \{ size, color } ->
@@ -130,7 +130,7 @@ elmFeather fun icon =
             |> Widget.Icon.elmFontawesome FontAwesome.Svg.viewIcon
 
 -}
-elmFontawesome : (icon -> Svg msg) -> icon -> Icon context theme msg
+elmFontawesome : (icon -> Svg msg) -> icon -> Icon context msg
 elmFontawesome fun icon =
     withIconStyle <|
         \{ size, color } ->
@@ -168,7 +168,7 @@ elmIonicons :
         }
      -> Html msg
     )
-    -> Icon context theme msg
+    -> Icon context msg
 elmIonicons fun =
     withIconStyle <|
         \{ size, color } ->
@@ -198,7 +198,7 @@ elmOcticons :
     , defaultOptions : options
     }
     -> (options -> Html msg)
-    -> Icon context theme msg
+    -> Icon context msg
 elmOcticons { withSize, withColor, defaultOptions } fun =
     withIconStyle <|
         \{ size, color } ->
@@ -222,7 +222,7 @@ elmOcticons { withSize, withColor, defaultOptions } fun =
             |> Widget.Icon.elmHeroicons
 
 -}
-elmHeroicons : (List (Svg.Attribute msg) -> Html msg) -> Icon context theme msg
+elmHeroicons : (List (Svg.Attribute msg) -> Html msg) -> Icon context msg
 elmHeroicons fun =
     withIconStyle <|
         \{ size, color } ->
@@ -246,7 +246,7 @@ elmHeroicons fun =
             |> Widget.Icon.antDesignIconsElm
 
 -}
-antDesignIconsElm : (List (Svg.Attribute msg) -> Html msg) -> Icon context theme msg
+antDesignIconsElm : (List (Svg.Attribute msg) -> Html msg) -> Icon context msg
 antDesignIconsElm fun =
     withIconStyle <|
         \{ size, color } ->
@@ -270,7 +270,7 @@ antDesignIconsElm fun =
             |> Widget.Icon.elmZondicons
 
 -}
-elmZondicons : (List (Svg.Attribute msg) -> Html msg) -> Icon context theme msg
+elmZondicons : (List (Svg.Attribute msg) -> Html msg) -> Icon context msg
 elmZondicons fun =
     withIconStyle <|
         \{ size, color } ->

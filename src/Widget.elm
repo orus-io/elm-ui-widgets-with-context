@@ -23,7 +23,7 @@ module Widget exposing
     , PasswordInputStyle, PasswordInput, newPasswordInput, currentPasswordInput
     , TabStyle, Tab, tab
     , ProgressIndicatorStyle, ProgressIndicator, circularProgressIndicator
-    , Attribute, Element, Label, Placeholder
+    , Attribute, Context, Element, Label, Placeholder
     )
 
 {-| This module contains different stateless view functions. No wiring required.
@@ -174,27 +174,26 @@ import Set exposing (Set)
 import Widget.Icon exposing (Icon)
 
 
-type alias Context context theme =
+type alias Context context =
     { context
-        | theme : theme
-        , device : Element.Device
+        | device : Element.Device
     }
 
 
-type alias Attribute context theme msg =
-    Element.Attribute (Context context theme) msg
+type alias Attribute context msg =
+    Element.Attribute (Context context) msg
 
 
-type alias Element context theme msg =
-    Element.Element (Context context theme) msg
+type alias Element context msg =
+    Element.Element (Context context) msg
 
 
-type alias Placeholder context theme msg =
-    Input.Placeholder (Context context theme) msg
+type alias Placeholder context msg =
+    Input.Placeholder (Context context) msg
 
 
-type alias Label context theme msg =
-    Input.Label (Context context theme) msg
+type alias Label context msg =
+    Input.Label (Context context) msg
 
 
 
@@ -204,17 +203,17 @@ type alias Label context theme msg =
 
 
 {-| -}
-type alias IconStyle theme =
+type alias IconStyle context =
     { size : Int
-    , color : theme -> Color
+    , color : Context context -> Color
     }
 
 
-type alias Icon context theme msg =
+type alias Icon context msg =
     { size : Int
-    , color : theme -> Color
+    , color : Context context -> Color
     }
-    -> Element context theme msg
+    -> Element context msg
 
 
 
@@ -224,19 +223,19 @@ type alias Icon context theme msg =
 
 
 {-| -}
-type alias ButtonStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
-    , ifDisabled : List (Attribute context theme msg)
-    , ifActive : List (Attribute context theme msg)
-    , otherwise : List (Attribute context theme msg)
+type alias ButtonStyle context msg =
+    { elementButton : List (Attribute context msg)
+    , ifDisabled : List (Attribute context msg)
+    , ifActive : List (Attribute context msg)
+    , otherwise : List (Attribute context msg)
     , content :
-        { elementRow : List (Attribute context theme msg)
+        { elementRow : List (Attribute context msg)
         , content :
-            { text : { contentText : List (Attribute context theme msg) }
+            { text : { contentText : List (Attribute context msg) }
             , icon :
-                { ifDisabled : IconStyle theme
-                , ifActive : IconStyle theme
-                , otherwise : IconStyle theme
+                { ifDisabled : IconStyle context
+                , ifActive : IconStyle context
+                , otherwise : IconStyle context
                 }
             }
         }
@@ -245,9 +244,9 @@ type alias ButtonStyle context theme msg =
 
 {-| Button widget type
 -}
-type alias Button context theme msg =
+type alias Button context msg =
     { text : String
-    , icon : Icon context theme msg
+    , icon : Icon context msg
     , onPress : Maybe msg
     }
 
@@ -279,16 +278,16 @@ type alias TextButton msg =
 
 -}
 iconButton :
-    ButtonStyle context theme msg
+    ButtonStyle context msg
     ->
         { text : String
-        , icon : Icon context theme msg
+        , icon : Icon context msg
         , onPress : Maybe msg
         }
-    -> Element context theme msg
+    -> Element context msg
 iconButton =
     let
-        fun : ButtonStyle context theme msg -> Button context theme msg -> Element context theme msg
+        fun : ButtonStyle context msg -> Button context msg -> Element context msg
         fun =
             Button.iconButton
     in
@@ -310,16 +309,16 @@ iconButton =
 
 -}
 textButton :
-    ButtonStyle context theme msg
+    ButtonStyle context msg
     ->
         { textButton
             | text : String
             , onPress : Maybe msg
         }
-    -> Element context theme msg
+    -> Element context msg
 textButton style { text, onPress } =
     let
-        fun : ButtonStyle context theme msg -> TextButton msg -> Element context theme msg
+        fun : ButtonStyle context msg -> TextButton msg -> Element context msg
         fun =
             Button.textButton
     in
@@ -348,16 +347,16 @@ textButton style { text, onPress } =
 
 -}
 button :
-    ButtonStyle context theme msg
+    ButtonStyle context msg
     ->
         { text : String
-        , icon : Icon context theme msg
+        , icon : Icon context msg
         , onPress : Maybe msg
         }
-    -> Element context theme msg
+    -> Element context msg
 button =
     let
-        fun : ButtonStyle context theme msg -> Button context theme msg -> Element context theme msg
+        fun : ButtonStyle context msg -> Button context msg -> Element context msg
         fun =
             Button.button
     in
@@ -371,24 +370,24 @@ button =
 
 
 {-| -}
-type alias SwitchStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
+type alias SwitchStyle context msg =
+    { elementButton : List (Attribute context msg)
     , content :
-        { element : List (Attribute context theme msg)
-        , ifDisabled : List (Attribute context theme msg)
-        , ifActive : List (Attribute context theme msg)
-        , otherwise : List (Attribute context theme msg)
+        { element : List (Attribute context msg)
+        , ifDisabled : List (Attribute context msg)
+        , ifActive : List (Attribute context msg)
+        , otherwise : List (Attribute context msg)
         }
     , contentInFront :
-        { element : List (Attribute context theme msg)
-        , ifDisabled : List (Attribute context theme msg)
-        , ifActive : List (Attribute context theme msg)
-        , otherwise : List (Attribute context theme msg)
+        { element : List (Attribute context msg)
+        , ifDisabled : List (Attribute context msg)
+        , ifActive : List (Attribute context msg)
+        , otherwise : List (Attribute context msg)
         , content :
-            { element : List (Attribute context theme msg)
-            , ifDisabled : List (Attribute context theme msg)
-            , ifActive : List (Attribute context theme msg)
-            , otherwise : List (Attribute context theme msg)
+            { element : List (Attribute context msg)
+            , ifDisabled : List (Attribute context msg)
+            , ifActive : List (Attribute context msg)
+            , otherwise : List (Attribute context msg)
             }
         }
     }
@@ -419,16 +418,16 @@ type alias Switch msg =
 
 -}
 switch :
-    SwitchStyle context theme msg
+    SwitchStyle context msg
     ->
         { description : String
         , onPress : Maybe msg
         , active : Bool
         }
-    -> Element context theme msg
+    -> Element context msg
 switch =
     let
-        fun : SwitchStyle context theme msg -> Switch msg -> Element context theme msg
+        fun : SwitchStyle context msg -> Switch msg -> Element context msg
         fun =
             Switch.switch
     in
@@ -448,12 +447,12 @@ Technical Remark:
   - A more suitable name would be "Choice"
 
 -}
-type alias Select context theme msg =
+type alias Select context msg =
     { selected : Maybe Int
     , options :
         List
             { text : String
-            , icon : Icon context theme msg
+            , icon : Icon context msg
             }
     , onSelect : Int -> Maybe msg
     }
@@ -466,12 +465,12 @@ Technical Remark:
   - A more suitable name would be "Options"
 
 -}
-type alias MultiSelect context theme msg =
+type alias MultiSelect context msg =
     { selected : Set Int
     , options :
         List
             { text : String
-            , icon : Icon context theme msg
+            , icon : Icon context msg
             }
     , onSelect : Int -> Maybe msg
     }
@@ -505,9 +504,9 @@ type alias MultiSelect context theme msg =
 
 -}
 selectButton :
-    ButtonStyle context theme msg
-    -> ( Bool, Button context theme msg )
-    -> Element context theme msg
+    ButtonStyle context msg
+    -> ( Bool, Button context msg )
+    -> Element context msg
 selectButton =
     Select.selectButton
 
@@ -540,9 +539,9 @@ selectButton =
 
 -}
 toggleButton :
-    ButtonStyle context theme msg
-    -> ( Bool, Button context theme msg )
-    -> Element context theme msg
+    ButtonStyle context msg
+    -> ( Bool, Button context msg )
+    -> Element context msg
 toggleButton =
     Select.toggleButton
 
@@ -575,8 +574,8 @@ toggleButton =
 
 -}
 select :
-    Select context theme msg
-    -> List ( Bool, Button context theme msg )
+    Select context msg
+    -> List ( Bool, Button context msg )
 select =
     Select.select
 
@@ -610,8 +609,8 @@ select =
 
 -}
 multiSelect :
-    MultiSelect context theme msg
-    -> List ( Bool, Button context theme msg )
+    MultiSelect context msg
+    -> List ( Bool, Button context msg )
 multiSelect =
     Select.multiSelect
 
@@ -623,9 +622,9 @@ multiSelect =
 
 
 {-| -}
-type alias Modal context theme msg =
+type alias Modal context msg =
     { onDismiss : Maybe msg
-    , content : Element context theme msg
+    , content : Element context msg
     }
 
 
@@ -655,7 +654,7 @@ Technical Remark:
   - To stop the screen from scrolling, set the height of the layout to the height of the screen.
 
 -}
-singleModal : List { onDismiss : Maybe msg, content : Element context theme msg } -> List (Attribute context theme msg)
+singleModal : List { onDismiss : Maybe msg, content : Element context msg } -> List (Attribute context msg)
 singleModal =
     Modal.singleModal
 
@@ -678,7 +677,7 @@ singleModal =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-multiModal : List { onDismiss : Maybe msg, content : Element context theme msg } -> List (Attribute context theme msg)
+multiModal : List { onDismiss : Maybe msg, content : Element context msg } -> List (Attribute context msg)
 multiModal =
     Modal.multiModal
 
@@ -690,20 +689,20 @@ multiModal =
 
 
 {-| -}
-type alias DialogStyle context theme msg =
-    { elementColumn : List (Attribute context theme msg)
+type alias DialogStyle context msg =
+    { elementColumn : List (Attribute context msg)
     , content :
         { title :
-            { contentText : List (Attribute context theme msg)
+            { contentText : List (Attribute context msg)
             }
         , text :
-            { contentText : List (Attribute context theme msg)
+            { contentText : List (Attribute context msg)
             }
         , buttons :
-            { elementRow : List (Attribute context theme msg)
+            { elementRow : List (Attribute context msg)
             , content :
-                { accept : ButtonStyle context theme msg
-                , dismiss : ButtonStyle context theme msg
+                { accept : ButtonStyle context msg
+                , dismiss : ButtonStyle context msg
                 }
             }
         }
@@ -751,17 +750,17 @@ type alias Dialog msg =
 
 -}
 dialog :
-    DialogStyle context theme msg
+    DialogStyle context msg
     ->
         { title : Maybe String
         , text : String
         , accept : Maybe (TextButton msg)
         , dismiss : Maybe (TextButton msg)
         }
-    -> Modal context theme msg
+    -> Modal context msg
 dialog =
     let
-        fun : DialogStyle context theme msg -> Dialog msg -> Modal context theme msg
+        fun : DialogStyle context msg -> Dialog msg -> Modal context msg
         fun =
             Dialog.dialog
     in
@@ -775,15 +774,15 @@ dialog =
 
 
 {-| -}
-type alias TextInputStyle context theme msg =
-    { elementRow : List (Attribute context theme msg)
+type alias TextInputStyle context msg =
+    { elementRow : List (Attribute context msg)
     , content :
         { chips :
-            { elementRow : List (Attribute context theme msg)
-            , content : ButtonStyle context theme msg
+            { elementRow : List (Attribute context msg)
+            , content : ButtonStyle context msg
             }
         , text :
-            { elementTextInput : List (Attribute context theme msg)
+            { elementTextInput : List (Attribute context msg)
             }
         }
     }
@@ -791,10 +790,10 @@ type alias TextInputStyle context theme msg =
 
 {-| Text Input widget type
 -}
-type alias TextInput context theme msg =
-    { chips : List (Button context theme msg)
+type alias TextInput context msg =
+    { chips : List (Button context msg)
     , text : String
-    , placeholder : Maybe (Placeholder context theme msg)
+    , placeholder : Maybe (Placeholder context msg)
     , label : String
     , onChange : String -> msg
     }
@@ -834,18 +833,18 @@ type alias TextInput context theme msg =
 
 -}
 textInput :
-    TextInputStyle context theme msg
+    TextInputStyle context msg
     ->
-        { chips : List (Button context theme msg)
+        { chips : List (Button context msg)
         , text : String
-        , placeholder : Maybe (Placeholder context theme msg)
+        , placeholder : Maybe (Placeholder context msg)
         , label : String
         , onChange : String -> msg
         }
-    -> Element context theme msg
+    -> Element context msg
 textInput =
     let
-        fun : TextInputStyle context theme msg -> TextInput context theme msg -> Element context theme msg
+        fun : TextInputStyle context msg -> TextInput context msg -> Element context msg
         fun =
             TextInput.textInput
     in
@@ -853,11 +852,11 @@ textInput =
 
 
 {-| -}
-type alias PasswordInputStyle context theme msg =
-    { elementRow : List (Attribute context theme msg)
+type alias PasswordInputStyle context msg =
+    { elementRow : List (Attribute context msg)
     , content :
         { password :
-            { elementPasswordInput : List (Attribute context theme msg)
+            { elementPasswordInput : List (Attribute context msg)
             }
         }
     }
@@ -865,9 +864,9 @@ type alias PasswordInputStyle context theme msg =
 
 {-| Password Input widget type
 -}
-type alias PasswordInput context theme msg =
+type alias PasswordInput context msg =
     { text : String
-    , placeholder : Maybe (Placeholder context theme msg)
+    , placeholder : Maybe (Placeholder context msg)
     , label : String
     , onChange : String -> msg
     , show : Bool
@@ -876,14 +875,14 @@ type alias PasswordInput context theme msg =
 
 {-| An input field that supports autofilling the current password
 -}
-currentPasswordInput : PasswordInputStyle context theme msg -> PasswordInput context theme msg -> Element context theme msg
+currentPasswordInput : PasswordInputStyle context msg -> PasswordInput context msg -> Element context msg
 currentPasswordInput =
     PasswordInput.currentPasswordInput
 
 
 {-| An input field that supports autofilling the new password
 -}
-newPasswordInput : PasswordInputStyle context theme msg -> PasswordInput context theme msg -> Element context theme msg
+newPasswordInput : PasswordInputStyle context msg -> PasswordInput context msg -> Element context msg
 newPasswordInput =
     PasswordInput.newPasswordInput
 
@@ -895,171 +894,171 @@ newPasswordInput =
 
 
 {-| -}
-type alias ItemStyle content context theme msg =
-    { element : List (Attribute context theme msg)
+type alias ItemStyle content context msg =
+    { element : List (Attribute context msg)
     , content : content
     }
 
 
 {-| -}
-type alias DividerStyle context theme msg =
-    { element : List (Attribute context theme msg)
+type alias DividerStyle context msg =
+    { element : List (Attribute context msg)
     }
 
 
 {-| -}
-type alias HeaderStyle context theme msg =
-    { elementColumn : List (Attribute context theme msg)
+type alias HeaderStyle context msg =
+    { elementColumn : List (Attribute context msg)
     , content :
-        { divider : DividerStyle context theme msg
-        , title : List (Attribute context theme msg)
+        { divider : DividerStyle context msg
+        , title : List (Attribute context msg)
         }
     }
 
 
 {-| -}
-type alias RowStyle context theme msg =
-    { elementRow : List (Attribute context theme msg)
+type alias RowStyle context msg =
+    { elementRow : List (Attribute context msg)
     , content :
-        { element : List (Attribute context theme msg)
-        , ifFirst : List (Attribute context theme msg)
-        , ifLast : List (Attribute context theme msg)
-        , ifSingleton : List (Attribute context theme msg)
-        , otherwise : List (Attribute context theme msg)
+        { element : List (Attribute context msg)
+        , ifFirst : List (Attribute context msg)
+        , ifLast : List (Attribute context msg)
+        , ifSingleton : List (Attribute context msg)
+        , otherwise : List (Attribute context msg)
         }
     }
 
 
 {-| -}
-type alias ColumnStyle context theme msg =
-    { elementColumn : List (Attribute context theme msg)
+type alias ColumnStyle context msg =
+    { elementColumn : List (Attribute context msg)
     , content :
-        { element : List (Attribute context theme msg)
-        , ifFirst : List (Attribute context theme msg)
-        , ifLast : List (Attribute context theme msg)
-        , ifSingleton : List (Attribute context theme msg)
-        , otherwise : List (Attribute context theme msg)
+        { element : List (Attribute context msg)
+        , ifFirst : List (Attribute context msg)
+        , ifLast : List (Attribute context msg)
+        , ifSingleton : List (Attribute context msg)
+        , otherwise : List (Attribute context msg)
         }
     }
 
 
 {-| -}
-type alias FullBleedItemStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
-    , ifDisabled : List (Attribute context theme msg)
-    , otherwise : List (Attribute context theme msg)
+type alias FullBleedItemStyle context msg =
+    { elementButton : List (Attribute context msg)
+    , ifDisabled : List (Attribute context msg)
+    , otherwise : List (Attribute context msg)
     , content :
-        { elementRow : List (Attribute context theme msg)
+        { elementRow : List (Attribute context msg)
         , content :
-            { text : { elementText : List (Attribute context theme msg) }
-            , icon : IconStyle theme
+            { text : { elementText : List (Attribute context msg) }
+            , icon : IconStyle context
             }
         }
     }
 
 
 {-| -}
-type alias InsetItemStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
-    , ifDisabled : List (Attribute context theme msg)
-    , otherwise : List (Attribute context theme msg)
+type alias InsetItemStyle context msg =
+    { elementButton : List (Attribute context msg)
+    , ifDisabled : List (Attribute context msg)
+    , otherwise : List (Attribute context msg)
     , content :
-        { elementRow : List (Attribute context theme msg)
+        { elementRow : List (Attribute context msg)
         , content :
-            { text : { elementText : List (Attribute context theme msg) }
+            { text : { elementText : List (Attribute context msg) }
             , icon :
-                { element : List (Attribute context theme msg)
-                , content : IconStyle theme
+                { element : List (Attribute context msg)
+                , content : IconStyle context
                 }
-            , content : IconStyle theme
+            , content : IconStyle context
             }
         }
     }
 
 
 {-| -}
-type alias MultiLineItemStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
-    , ifDisabled : List (Attribute context theme msg)
-    , otherwise : List (Attribute context theme msg)
+type alias MultiLineItemStyle context msg =
+    { elementButton : List (Attribute context msg)
+    , ifDisabled : List (Attribute context msg)
+    , otherwise : List (Attribute context msg)
     , content :
-        { elementRow : List (Attribute context theme msg)
+        { elementRow : List (Attribute context msg)
         , content :
             { description :
-                { elementColumn : List (Attribute context theme msg)
+                { elementColumn : List (Attribute context msg)
                 , content :
-                    { title : { elementText : List (Attribute context theme msg) }
-                    , text : { elementText : List (Attribute context theme msg) }
+                    { title : { elementText : List (Attribute context msg) }
+                    , text : { elementText : List (Attribute context msg) }
                     }
                 }
             , icon :
-                { element : List (Attribute context theme msg)
-                , content : IconStyle theme
+                { element : List (Attribute context msg)
+                , content : IconStyle context
                 }
-            , content : IconStyle theme
+            , content : IconStyle context
             }
         }
     }
 
 
 {-| -}
-type alias ImageItemStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
-    , ifDisabled : List (Attribute context theme msg)
-    , otherwise : List (Attribute context theme msg)
+type alias ImageItemStyle context msg =
+    { elementButton : List (Attribute context msg)
+    , ifDisabled : List (Attribute context msg)
+    , otherwise : List (Attribute context msg)
     , content :
-        { elementRow : List (Attribute context theme msg)
+        { elementRow : List (Attribute context msg)
         , content :
-            { text : { elementText : List (Attribute context theme msg) }
-            , image : { element : List (Attribute context theme msg) }
-            , content : IconStyle theme
+            { text : { elementText : List (Attribute context msg) }
+            , image : { element : List (Attribute context msg) }
+            , content : IconStyle context
             }
         }
     }
 
 
 {-| -}
-type alias ExpansionItemStyle context theme msg =
-    { item : ItemStyle (InsetItemStyle context theme msg) context theme msg
-    , expandIcon : Icon context theme msg
-    , collapseIcon : Icon context theme msg
+type alias ExpansionItemStyle context msg =
+    { item : ItemStyle (InsetItemStyle context msg) context msg
+    , expandIcon : Icon context msg
+    , collapseIcon : Icon context msg
     }
 
 
 {-| -}
-type alias InsetItem context theme msg =
+type alias InsetItem context msg =
     { text : String
     , onPress : Maybe msg
-    , icon : Icon context theme msg
-    , content : Icon context theme msg
+    , icon : Icon context msg
+    , content : Icon context msg
     }
 
 
 {-| -}
-type alias MultiLineItem context theme msg =
+type alias MultiLineItem context msg =
     { title : String
     , text : String
     , onPress : Maybe msg
-    , icon : Icon context theme msg
-    , content : Icon context theme msg
+    , icon : Icon context msg
+    , content : Icon context msg
     }
 
 
 {-| -}
-type alias ImageItem context theme msg =
+type alias ImageItem context msg =
     { text : String
     , onPress : Maybe msg
-    , image : Element context theme msg
-    , content : Icon context theme msg
+    , image : Element context msg
+    , content : Icon context msg
     }
 
 
 {-| -}
-type alias ExpansionItem context theme msg =
-    { icon : Icon context theme msg
+type alias ExpansionItem context msg =
+    { icon : Icon context msg
     , text : String
     , onToggle : Bool -> msg
-    , content : List (Item context theme msg)
+    , content : List (Item context msg)
     , isExpanded : Bool
     }
 
@@ -1069,8 +1068,8 @@ type alias ExpansionItem context theme msg =
 Use `Widget.asItem` if you want to turn a simple element into an item.
 
 -}
-type alias Item context theme msg =
-    List (Attribute context theme msg) -> Element context theme msg
+type alias Item context msg =
+    List (Attribute context msg) -> Element context msg
 
 
 {-| A text item spanning the full width.
@@ -1095,16 +1094,16 @@ type alias Item context theme msg =
 
 -}
 fullBleedItem :
-    ItemStyle (FullBleedItemStyle context theme msg) context theme msg
+    ItemStyle (FullBleedItemStyle context msg) context msg
     ->
         { text : String
         , onPress : Maybe msg
-        , icon : Icon context theme msg
+        , icon : Icon context msg
         }
-    -> Item context theme msg
+    -> Item context msg
 fullBleedItem =
     let
-        fun : ItemStyle (FullBleedItemStyle context theme msg) context theme msg -> Button context theme msg -> Item context theme msg
+        fun : ItemStyle (FullBleedItemStyle context msg) context msg -> Button context msg -> Item context msg
         fun =
             Item.fullBleedItem
     in
@@ -1123,7 +1122,7 @@ fullBleedItem =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-asItem : Element context theme msg -> Item context theme msg
+asItem : Element context msg -> Item context msg
 asItem =
     Item.asItem
 
@@ -1149,7 +1148,7 @@ asItem =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-divider : ItemStyle (DividerStyle context theme msg) context theme msg -> Item context theme msg
+divider : ItemStyle (DividerStyle context msg) context msg -> Item context msg
 divider =
     Item.divider
 
@@ -1176,7 +1175,7 @@ divider =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-headerItem : ItemStyle (HeaderStyle context theme msg) context theme msg -> String -> Item context theme msg
+headerItem : ItemStyle (HeaderStyle context msg) context msg -> String -> Item context msg
 headerItem =
     Item.headerItem
 
@@ -1205,17 +1204,17 @@ headerItem =
 
 -}
 insetItem :
-    ItemStyle (InsetItemStyle context theme msg) context theme msg
+    ItemStyle (InsetItemStyle context msg) context msg
     ->
         { text : String
         , onPress : Maybe msg
-        , icon : Icon context theme msg
-        , content : Icon context theme msg
+        , icon : Icon context msg
+        , content : Icon context msg
         }
-    -> Item context theme msg
+    -> Item context msg
 insetItem =
     let
-        fun : ItemStyle (InsetItemStyle context theme msg) context theme msg -> InsetItem context theme msg -> Item context theme msg
+        fun : ItemStyle (InsetItemStyle context msg) context msg -> InsetItem context msg -> Item context msg
         fun =
             Item.insetItem
     in
@@ -1240,18 +1239,18 @@ insetItem =
 
 -}
 multiLineItem :
-    ItemStyle (MultiLineItemStyle context theme msg) context theme msg
+    ItemStyle (MultiLineItemStyle context msg) context msg
     ->
         { title : String
         , text : String
         , onPress : Maybe msg
-        , icon : Icon context theme msg
-        , content : Icon context theme msg
+        , icon : Icon context msg
+        , content : Icon context msg
         }
-    -> Item context theme msg
+    -> Item context msg
 multiLineItem =
     let
-        fun : ItemStyle (MultiLineItemStyle context theme msg) context theme msg -> MultiLineItem context theme msg -> Item context theme msg
+        fun : ItemStyle (MultiLineItemStyle context msg) context msg -> MultiLineItem context msg -> Item context msg
         fun =
             Item.multiLineItem
     in
@@ -1288,17 +1287,17 @@ multiLineItem =
 
 -}
 imageItem :
-    ItemStyle (ImageItemStyle context theme msg) context theme msg
+    ItemStyle (ImageItemStyle context msg) context msg
     ->
         { text : String
         , onPress : Maybe msg
-        , image : Element context theme msg
-        , content : Icon context theme msg
+        , image : Element context msg
+        , content : Icon context msg
         }
-    -> Item context theme msg
+    -> Item context msg
 imageItem =
     let
-        fun : ItemStyle (ImageItemStyle context theme msg) context theme msg -> ImageItem context theme msg -> Item context theme msg
+        fun : ItemStyle (ImageItemStyle context msg) context msg -> ImageItem context msg -> Item context msg
         fun =
             Item.imageItem
     in
@@ -1343,18 +1342,18 @@ imageItem =
 
 -}
 expansionItem :
-    ExpansionItemStyle context theme msg
+    ExpansionItemStyle context msg
     ->
-        { icon : Icon context theme msg
+        { icon : Icon context msg
         , text : String
         , onToggle : Bool -> msg
-        , content : List (Item context theme msg)
+        , content : List (Item context msg)
         , isExpanded : Bool
         }
-    -> List (Item context theme msg)
+    -> List (Item context msg)
 expansionItem =
     let
-        fun : ExpansionItemStyle context theme msg -> ExpansionItem context theme msg -> List (Item context theme msg)
+        fun : ExpansionItemStyle context msg -> ExpansionItem context msg -> List (Item context msg)
         fun =
             Item.expansionItem
     in
@@ -1390,7 +1389,7 @@ expansionItem =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-selectItem : ItemStyle (ButtonStyle context theme msg) context theme msg -> Select context theme msg -> List (Item context theme msg)
+selectItem : ItemStyle (ButtonStyle context msg) context msg -> Select context msg -> List (Item context msg)
 selectItem =
     Item.selectItem
 
@@ -1407,10 +1406,10 @@ selectItem =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-row : RowStyle context theme msg -> List (Element context theme msg) -> Element context theme msg
+row : RowStyle context msg -> List (Element context msg) -> Element context msg
 row =
     let
-        fun : RowStyle context theme msg -> List (Element context theme msg) -> Element context theme msg
+        fun : RowStyle context msg -> List (Element context msg) -> Element context msg
         fun =
             List.row
     in
@@ -1429,10 +1428,10 @@ row =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-column : ColumnStyle context theme msg -> List (Element context theme msg) -> Element context theme msg
+column : ColumnStyle context msg -> List (Element context msg) -> Element context msg
 column =
     let
-        fun : ColumnStyle context theme msg -> List (Element context theme msg) -> Element context theme msg
+        fun : ColumnStyle context msg -> List (Element context msg) -> Element context msg
         fun =
             List.column
     in
@@ -1461,10 +1460,10 @@ column =
         |> always "Ignore this line" --> "Ignore this line"
 
 -}
-itemList : ColumnStyle context theme msg -> List (Item context theme msg) -> Element context theme msg
+itemList : ColumnStyle context msg -> List (Item context msg) -> Element context msg
 itemList =
     let
-        fun : ColumnStyle context theme msg -> List (Item context theme msg) -> Element context theme msg
+        fun : ColumnStyle context msg -> List (Item context msg) -> Element context msg
         fun =
             List.itemList
     in
@@ -1503,11 +1502,11 @@ itemList =
 
 -}
 buttonRow :
-    { elementRow : RowStyle context theme msg
-    , content : ButtonStyle context theme msg
+    { elementRow : RowStyle context msg
+    , content : ButtonStyle context msg
     }
-    -> List ( Bool, Button context theme msg )
-    -> Element context theme msg
+    -> List ( Bool, Button context msg )
+    -> Element context msg
 buttonRow =
     List.buttonRow
 
@@ -1544,11 +1543,11 @@ buttonRow =
 
 -}
 toggleRow :
-    { elementRow : RowStyle context theme msg
-    , content : ButtonStyle context theme msg
+    { elementRow : RowStyle context msg
+    , content : ButtonStyle context msg
     }
-    -> List ( Bool, Button context theme msg )
-    -> Element context theme msg
+    -> List ( Bool, Button context msg )
+    -> Element context msg
 toggleRow =
     List.toggleRow
 
@@ -1585,11 +1584,11 @@ toggleRow =
 
 -}
 wrappedButtonRow :
-    { elementRow : RowStyle context theme msg
-    , content : ButtonStyle context theme msg
+    { elementRow : RowStyle context msg
+    , content : ButtonStyle context msg
     }
-    -> List ( Bool, Button context theme msg )
-    -> Element context theme msg
+    -> List ( Bool, Button context msg )
+    -> Element context msg
 wrappedButtonRow =
     List.wrappedButtonRow
 
@@ -1626,11 +1625,11 @@ wrappedButtonRow =
 
 -}
 buttonColumn :
-    { elementColumn : ColumnStyle context theme msg
-    , content : ButtonStyle context theme msg
+    { elementColumn : ColumnStyle context msg
+    , content : ButtonStyle context msg
     }
-    -> List ( Bool, Button context theme msg )
-    -> Element context theme msg
+    -> List ( Bool, Button context msg )
+    -> Element context msg
 buttonColumn =
     List.buttonColumn
 
@@ -1642,20 +1641,20 @@ buttonColumn =
 
 
 {-| -}
-type alias AppBarStyle content context theme msg =
-    { elementRow : List (Attribute context theme msg)
+type alias AppBarStyle content context msg =
+    { elementRow : List (Attribute context msg)
     , content :
         { menu :
-            { elementRow : List (Attribute context theme msg)
+            { elementRow : List (Attribute context msg)
             , content : content
             }
-        , search : TextInputStyle context theme msg
+        , search : TextInputStyle context msg
         , actions :
-            { elementRow : List (Attribute context theme msg)
+            { elementRow : List (Attribute context msg)
             , content :
-                { button : ButtonStyle context theme msg
-                , searchIcon : Icon context theme msg
-                , moreVerticalIcon : Icon context theme msg
+                { button : ButtonStyle context msg
+                , searchIcon : Icon context msg
+                , moreVerticalIcon : Icon context msg
                 }
             }
         }
@@ -1697,21 +1696,20 @@ This should be the default way to display the app bar. Specially for Phone users
 -}
 menuBar :
     AppBarStyle
-        { menuIcon : Icon context theme msg
-        , title : List (Attribute context theme msg)
+        { menuIcon : Icon context msg
+        , title : List (Attribute context msg)
         }
         context
-        theme
         msg
     ->
-        { title : Element context theme msg
+        { title : Element context msg
         , openLeftSheet : Maybe msg
         , openRightSheet : Maybe msg
         , openTopSheet : Maybe msg
-        , primaryActions : List (Button context theme msg)
-        , search : Maybe (TextInput context theme msg)
+        , primaryActions : List (Button context msg)
+        , search : Maybe (TextInput context msg)
         }
-    -> Element context theme msg
+    -> Element context msg
 menuBar =
     AppBar.menuBar
 
@@ -1765,21 +1763,20 @@ It should be avoided for smaller screens or if you have more then 4 tabs
 -}
 tabBar :
     AppBarStyle
-        { menuTabButton : ButtonStyle context theme msg
-        , title : List (Attribute context theme msg)
+        { menuTabButton : ButtonStyle context msg
+        , title : List (Attribute context msg)
         }
         context
-        theme
         msg
     ->
-        { title : Element context theme msg
-        , menu : Select context theme msg
+        { title : Element context msg
+        , menu : Select context msg
         , openRightSheet : Maybe msg
         , openTopSheet : Maybe msg
-        , primaryActions : List (Button context theme msg)
-        , search : Maybe (TextInput context theme msg)
+        , primaryActions : List (Button context msg)
+        , search : Maybe (TextInput context msg)
         }
-    -> Element context theme msg
+    -> Element context msg
 tabBar =
     AppBar.tabBar
 
@@ -1796,13 +1793,13 @@ tabBar =
     To avoid that, make sure to wrap them in `Element.html >> Element.el []`
 
 -}
-type alias SortTableStyle context theme msg =
-    { elementTable : List (Attribute context theme msg)
+type alias SortTableStyle context msg =
+    { elementTable : List (Attribute context msg)
     , content :
-        { header : ButtonStyle context theme msg
-        , ascIcon : Icon context theme msg
-        , descIcon : Icon context theme msg
-        , defaultIcon : Icon context theme msg
+        { header : ButtonStyle context msg
+        , ascIcon : Icon context msg
+        , descIcon : Icon context msg
+        , defaultIcon : Icon context msg
         }
     }
 
@@ -1938,7 +1935,7 @@ stringColumn =
 
 -}
 sortTable :
-    SortTableStyle context theme msg
+    SortTableStyle context msg
     ->
         { content : List a
         , columns : List (Column a)
@@ -1946,10 +1943,10 @@ sortTable :
         , asc : Bool
         , onChange : String -> msg
         }
-    -> Element context theme msg
+    -> Element context msg
 sortTable =
     let
-        fun : SortTableStyle context theme msg -> SortTable a msg -> Element context theme msg
+        fun : SortTableStyle context msg -> SortTable a msg -> Element context msg
         fun =
             SortTable.sortTable
     in
@@ -1963,23 +1960,23 @@ sortTable =
 
 
 {-| -}
-type alias TabStyle context theme msg =
-    { elementColumn : List (Attribute context theme msg)
+type alias TabStyle context msg =
+    { elementColumn : List (Attribute context msg)
     , content :
         { tabs :
-            { elementRow : List (Attribute context theme msg)
-            , content : ButtonStyle context theme msg
+            { elementRow : List (Attribute context msg)
+            , content : ButtonStyle context msg
             }
-        , content : List (Attribute context theme msg)
+        , content : List (Attribute context msg)
         }
     }
 
 
 {-| Tab widget type
 -}
-type alias Tab context theme msg =
-    { tabs : Select context theme msg
-    , content : Maybe Int -> Element context theme msg
+type alias Tab context msg =
+    { tabs : Select context msg
+    , content : Maybe Int -> Element context msg
     }
 
 
@@ -2031,15 +2028,15 @@ type alias Tab context theme msg =
 
 -}
 tab :
-    TabStyle context theme msg
+    TabStyle context msg
     ->
-        { tabs : Select context theme msg
-        , content : Maybe Int -> Element context theme msg
+        { tabs : Select context msg
+        , content : Maybe Int -> Element context msg
         }
-    -> Element context theme msg
+    -> Element context msg
 tab =
     let
-        fun : TabStyle context theme msg -> Tab context theme msg -> Element context theme msg
+        fun : TabStyle context msg -> Tab context msg -> Element context msg
         fun =
             Tab.tab
     in
@@ -2053,8 +2050,8 @@ tab =
 
 
 {-| -}
-type alias ProgressIndicatorStyle context theme msg =
-    { elementFunction : Maybe Float -> Element context theme msg
+type alias ProgressIndicatorStyle context msg =
+    { elementFunction : Maybe Float -> Element context msg
     }
 
 
@@ -2078,8 +2075,8 @@ type alias ProgressIndicator =
 
 -}
 circularProgressIndicator :
-    ProgressIndicatorStyle context theme msg
+    ProgressIndicatorStyle context msg
     -> Maybe Float
-    -> Element context theme msg
+    -> Element context msg
 circularProgressIndicator =
     ProgressIndicator.circularProgressIndicator

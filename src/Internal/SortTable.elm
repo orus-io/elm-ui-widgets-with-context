@@ -22,13 +22,13 @@ import Widget.Icon exposing (Icon)
     To avoid that, make sure to wrap them in `Element.html >> Element.el []`
 
 -}
-type alias SortTableStyle context theme msg =
-    { elementTable : List (Attribute context theme msg)
+type alias SortTableStyle context msg =
+    { elementTable : List (Attribute context msg)
     , content :
-        { header : ButtonStyle context theme msg
-        , ascIcon : Icon context theme msg
-        , descIcon : Icon context theme msg
-        , defaultIcon : Icon context theme msg
+        { header : ButtonStyle context msg
+        , ascIcon : Icon context msg
+        , descIcon : Icon context msg
+        , defaultIcon : Icon context msg
         }
     }
 
@@ -106,9 +106,9 @@ stringColumn { title, value, toString, width } =
 {-| The View
 -}
 sortTable :
-    SortTableStyle context theme msg
+    SortTableStyle context msg
     -> SortTable a msg
-    -> Element context theme msg
+    -> Element context msg
 sortTable style model =
     let
         findTitle : List (Column a) -> Maybe (ColumnType a)

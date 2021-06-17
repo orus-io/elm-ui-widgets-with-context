@@ -11,14 +11,13 @@ import Element.WithContext as Element
 import Element.WithContext.Background as Background
 import Element.WithContext.Border as Border
 import Element.WithContext.Font as Font
-import Internal.Context exposing (Context)
 import Internal.List exposing (ColumnStyle, RowStyle)
-import Widget.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 
 
-row : RowStyle context Theme msg
+row : RowStyle (Context context) msg
 row =
     { elementRow =
         [ Element.paddingXY 0 8
@@ -34,7 +33,7 @@ row =
     }
 
 
-column : ColumnStyle context Theme msg
+column : ColumnStyle (Context context) msg
 column =
     { elementColumn =
         [ Element.paddingXY 0 8
@@ -50,7 +49,7 @@ column =
     }
 
 
-toggleRow : RowStyle context Theme msg
+toggleRow : RowStyle (Context context) msg
 toggleRow =
     { elementRow = []
     , content =
@@ -81,7 +80,7 @@ toggleRow =
     }
 
 
-cardColumn : ColumnStyle context Theme msg
+cardColumn : ColumnStyle (Context context) msg
 cardColumn =
     { elementColumn =
         [ Element.width <| Element.fill
@@ -144,7 +143,7 @@ cardColumn =
     }
 
 
-sideSheet : ColumnStyle context Theme msg
+sideSheet : ColumnStyle (Context context) msg
 sideSheet =
     { elementColumn =
         (getSurfaceColor |> MaterialColor.textAndBackground)
@@ -174,7 +173,7 @@ sideSheet =
     }
 
 
-bottomSheet : ColumnStyle context Theme msg
+bottomSheet : ColumnStyle (Context context) msg
 bottomSheet =
     { elementColumn =
         (getSurfaceColor |> MaterialColor.textAndBackground)

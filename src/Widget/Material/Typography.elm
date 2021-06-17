@@ -39,7 +39,7 @@ import Internal.Context exposing (Attribute)
 
 {-| Headline 1 for Material Design. Size: 96px
 -}
-h1 : List (Attribute context theme msg)
+h1 : List (Attribute context msg)
 h1 =
     [ Font.size 96
     , Font.extraLight --light
@@ -49,7 +49,7 @@ h1 =
 
 {-| Headline 2 for Material Design. Size: 60px
 -}
-h2 : List (Attribute context theme msg)
+h2 : List (Attribute context msg)
 h2 =
     [ Font.size 60
     , Font.extraLight --light
@@ -59,7 +59,7 @@ h2 =
 
 {-| Headline 3 for Material Design. Size: 48px
 -}
-h3 : List (Attribute context theme msg)
+h3 : List (Attribute context msg)
 h3 =
     [ Font.size 48
     ]
@@ -67,7 +67,7 @@ h3 =
 
 {-| Headline 3 for Material Design. Size: 34px
 -}
-h4 : List (Attribute context theme msg)
+h4 : List (Attribute context msg)
 h4 =
     [ Font.size 34
     , Font.letterSpacing 0.25
@@ -76,7 +76,7 @@ h4 =
 
 {-| Headline 3 for Material Design. Size: 24px
 -}
-h5 : List (Attribute context theme msg)
+h5 : List (Attribute context msg)
 h5 =
     [ Font.size 24
     ]
@@ -84,7 +84,7 @@ h5 =
 
 {-| Headline 3 for Material Design. Size: 20px
 -}
-h6 : List (Attribute context theme msg)
+h6 : List (Attribute context msg)
 h6 =
     [ Font.size 20
     , Font.semiBold --medium
@@ -94,7 +94,7 @@ h6 =
 
 {-| Variant 1 for subtitles for Material Design. Size: 16px
 -}
-subtitle1 : List (Attribute context theme msg)
+subtitle1 : List (Attribute context msg)
 subtitle1 =
     [ Font.size 16
     , Font.letterSpacing 0.15
@@ -103,7 +103,7 @@ subtitle1 =
 
 {-| Variant 2 for subtitles for Material Design. Size: 14px
 -}
-subtitle2 : List (Attribute context theme msg)
+subtitle2 : List (Attribute context msg)
 subtitle2 =
     [ Font.size 14
     , Font.semiBold --medium
@@ -113,7 +113,7 @@ subtitle2 =
 
 {-| Variant 1 for the default font size: 16px
 -}
-body1 : List (Attribute context theme msg)
+body1 : List (Attribute context msg)
 body1 =
     [ Font.size 16
     , Font.letterSpacing 0.5
@@ -122,7 +122,7 @@ body1 =
 
 {-| Variant 2 for the default font size: 14px
 -}
-body2 : List (Attribute context theme msg)
+body2 : List (Attribute context msg)
 body2 =
     [ Font.size 14
     , Font.letterSpacing 0.25
@@ -131,7 +131,7 @@ body2 =
 
 {-| Font for Material Design buttons. Size: 14px
 -}
-button : List (Attribute context theme msg)
+button : List (Attribute context msg)
 button =
     [ Element.htmlAttribute <| Attributes.style "text-transform" "uppercase"
     , Font.size 14
@@ -142,7 +142,7 @@ button =
 
 {-| Captions for Material Design. Size: 12px
 -}
-caption : List (Attribute context theme msg)
+caption : List (Attribute context msg)
 caption =
     [ Font.size 12
     , Font.letterSpacing 0.4
@@ -151,7 +151,7 @@ caption =
 
 {-| overline for Material Design. Size: 10px
 -}
-overline : List (Attribute context theme msg)
+overline : List (Attribute context msg)
 overline =
     [ Element.htmlAttribute <| Attributes.style "text-transform" "uppercase"
     , Font.size 10

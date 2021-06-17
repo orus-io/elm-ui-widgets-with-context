@@ -10,20 +10,20 @@ import Widget.Customize as Customize
 import Widget.Icon exposing (Icon)
 
 
-type alias AppBarStyle content context theme msg =
-    { elementRow : List (Attribute context theme msg) --header
+type alias AppBarStyle content context msg =
+    { elementRow : List (Attribute context msg) --header
     , content :
         { menu :
-            { elementRow : List (Attribute context theme msg)
+            { elementRow : List (Attribute context msg)
             , content : content
             }
-        , search : TextInputStyle context theme msg --search
+        , search : TextInputStyle context msg --search
         , actions :
-            { elementRow : List (Attribute context theme msg)
+            { elementRow : List (Attribute context msg)
             , content :
-                { button : ButtonStyle context theme msg --menuButton
-                , searchIcon : Icon context theme msg
-                , moreVerticalIcon : Icon context theme msg
+                { button : ButtonStyle context msg --menuButton
+                , searchIcon : Icon context msg
+                , moreVerticalIcon : Icon context msg
                 }
             }
         }
@@ -32,21 +32,20 @@ type alias AppBarStyle content context theme msg =
 
 menuBar :
     AppBarStyle
-        { menuIcon : Icon context theme msg
-        , title : List (Attribute context theme msg)
+        { menuIcon : Icon context msg
+        , title : List (Attribute context msg)
         }
         context
-        theme
         msg
     ->
-        { title : Element context theme msg
+        { title : Element context msg
         , openLeftSheet : Maybe msg
         , openRightSheet : Maybe msg
         , openTopSheet : Maybe msg
-        , primaryActions : List (Button context theme msg)
-        , search : Maybe (TextInput context theme msg)
+        , primaryActions : List (Button context msg)
+        , search : Maybe (TextInput context msg)
         }
-    -> Element context theme msg
+    -> Element context msg
 menuBar style m =
     internalNav
         [ Button.iconButton style.content.actions.content.button
@@ -72,21 +71,20 @@ menuBar style m =
 -}
 tabBar :
     AppBarStyle
-        { menuTabButton : ButtonStyle context theme msg
-        , title : List (Attribute context theme msg)
+        { menuTabButton : ButtonStyle context msg
+        , title : List (Attribute context msg)
         }
         context
-        theme
         msg
     ->
-        { title : Element context theme msg
-        , menu : Select context theme msg
+        { title : Element context msg
+        , menu : Select context msg
         , openRightSheet : Maybe msg
         , openTopSheet : Maybe msg
-        , primaryActions : List (Button context theme msg)
-        , search : Maybe (TextInput context theme msg)
+        , primaryActions : List (Button context msg)
+        , search : Maybe (TextInput context msg)
         }
-    -> Element context theme msg
+    -> Element context msg
 tabBar style m =
     internalNav
         [ m.title |> Element.el style.content.menu.content.title
@@ -111,20 +109,20 @@ tabBar style m =
 
 {-| -}
 internalNav :
-    List (Element context theme msg)
+    List (Element context msg)
     ->
-        { elementRow : List (Attribute context theme msg) --header
+        { elementRow : List (Attribute context msg) --header
         , content :
             { menu :
-                { elementRow : List (Attribute context theme msg)
+                { elementRow : List (Attribute context msg)
                 }
-            , search : TextInputStyle context theme msg --search
+            , search : TextInputStyle context msg --search
             , actions :
-                { elementRow : List (Attribute context theme msg)
+                { elementRow : List (Attribute context msg)
                 , content :
-                    { button : ButtonStyle context theme msg --menuButton
-                    , searchIcon : Icon context theme msg
-                    , moreVerticalIcon : Icon context theme msg
+                    { button : ButtonStyle context msg --menuButton
+                    , searchIcon : Icon context msg
+                    , moreVerticalIcon : Icon context msg
                     }
                 }
             }
@@ -133,10 +131,10 @@ internalNav :
         { model
             | openRightSheet : Maybe msg
             , openTopSheet : Maybe msg
-            , primaryActions : List (Button context theme msg)
-            , search : Maybe (TextInput context theme msg)
+            , primaryActions : List (Button context msg)
+            , search : Maybe (TextInput context msg)
         }
-    -> Element context theme msg
+    -> Element context msg
 internalNav menuElements style { openRightSheet, openTopSheet, primaryActions, search } =
     Element.with
         (\{ device } ->

@@ -5,15 +5,15 @@ import Element.WithContext.Background as Background
 import Element.WithContext.Border as Border
 import Element.WithContext.Font as Font
 import Internal.Button exposing (ButtonStyle)
-import Internal.Context exposing (Context)
 import Internal.Material.Button as Button
 import Internal.Material.Palette as Palette exposing (Palette)
 import Internal.Tab exposing (TabStyle)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 import Widget.Material.Typography as Typography
 
 
-tabButton : ButtonStyle context Palette msg
+tabButton : ButtonStyle (Context context) msg
 tabButton =
     { elementButton =
         Typography.button
@@ -24,47 +24,35 @@ tabButton =
                     |> Element.width
                , Element.paddingXY 12 16
                , Font.color
-                    |> Element.withAttribute
-                        (\{ theme } ->
-                            theme.primary
-                                |> MaterialColor.fromColor
-                        )
+                    |> withPrimaryAttribute
+                        MaterialColor.fromColor
                , Element.mouseDown
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                , Element.focused
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                , Element.mouseOver
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                ]
     , ifDisabled =
         (Button.baseButton |> .ifDisabled)
             ++ [ Font.color
-                    |> Element.withAttribute
-                        (\{ theme } ->
-                            Palette.gray theme
-                                |> MaterialColor.fromColor
-                        )
+                    |> withPaletteAttribute
+                        (Palette.gray >> MaterialColor.fromColor)
                , Element.mouseDown []
                , Element.mouseOver []
                , Element.focused []
@@ -91,15 +79,15 @@ tabButton =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 }
             }
@@ -107,7 +95,7 @@ tabButton =
     }
 
 
-tab : TabStyle context Palette msg
+tab : TabStyle (Context context) msg
 tab =
     { elementColumn = [ Element.spacing 8, Element.width <| Element.fill ]
     , content =

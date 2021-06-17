@@ -7,29 +7,29 @@ import Internal.Context exposing (Attribute, Context, Element)
 import Widget.Icon exposing (Icon, IconStyle)
 
 
-type alias ButtonStyle context theme msg =
-    { elementButton : List (Attribute context theme msg)
-    , ifDisabled : List (Attribute context theme msg)
-    , ifActive : List (Attribute context theme msg)
-    , otherwise : List (Attribute context theme msg)
+type alias ButtonStyle context msg =
+    { elementButton : List (Attribute context msg)
+    , ifDisabled : List (Attribute context msg)
+    , ifActive : List (Attribute context msg)
+    , otherwise : List (Attribute context msg)
     , content :
-        { elementRow : List (Attribute context theme msg)
+        { elementRow : List (Attribute context msg)
         , content :
-            { text : { contentText : List (Attribute context theme msg) }
+            { text : { contentText : List (Attribute context msg) }
             , icon :
-                { ifDisabled : IconStyle theme
-                , ifActive : IconStyle theme
-                , otherwise : IconStyle theme
+                { ifDisabled : IconStyle context
+                , ifActive : IconStyle context
+                , otherwise : IconStyle context
                 }
             }
         }
     }
 
 
-type alias Button context theme msg =
+type alias Button context msg =
     { text : String
     , onPress : Maybe msg
-    , icon : Icon context theme msg
+    , icon : Icon context msg
     }
 
 
@@ -39,7 +39,7 @@ type alias TextButton msg =
     }
 
 
-iconButton : ButtonStyle context theme msg -> Button context theme msg -> Element context theme msg
+iconButton : ButtonStyle context msg -> Button context msg -> Element context msg
 iconButton style { onPress, text, icon } =
     Input.button
         (style.elementButton
@@ -64,7 +64,7 @@ iconButton style { onPress, text, icon } =
         }
 
 
-textButton : ButtonStyle context theme msg -> TextButton msg -> Element context theme msg
+textButton : ButtonStyle context msg -> TextButton msg -> Element context msg
 textButton style { onPress, text } =
     button style
         { onPress = onPress
@@ -74,9 +74,9 @@ textButton style { onPress, text } =
 
 
 button :
-    ButtonStyle context theme msg
-    -> Button context theme msg
-    -> Element context theme msg
+    ButtonStyle context msg
+    -> Button context msg
+    -> Element context msg
 button style { onPress, text, icon } =
     Input.button
         (style.elementButton

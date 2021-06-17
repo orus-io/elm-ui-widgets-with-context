@@ -5,13 +5,13 @@ import Element.WithContext as Element
 import Element.WithContext.Background as Background
 import Element.WithContext.Border as Border
 import Html.Attributes as Attributes
-import Widget.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Internal.Switch exposing (SwitchStyle)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 
 
-switch : SwitchStyle context Theme msg
+switch : SwitchStyle (Context context) msg
 switch =
     { elementButton =
         [ Element.height <| Element.px 38

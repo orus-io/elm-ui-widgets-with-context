@@ -146,7 +146,6 @@ import Internal.List exposing (ColumnStyle, RowStyle)
 import Internal.Material.AppBar as AppBar
 import Internal.Material.Button as Button
 import Internal.Material.Chip as Chip
-import Widget.Material.Context exposing (Theme)
 import Internal.Material.Dialog as Dialog
 import Internal.Material.Item as Item
 import Internal.Material.List as List
@@ -165,6 +164,7 @@ import Internal.Switch exposing (SwitchStyle)
 import Internal.Tab exposing (TabStyle)
 import Internal.TextInput exposing (TextInputStyle)
 import Widget.Icon exposing (Icon)
+import Widget.Material.Context exposing (Context)
 import Widget.Snackbar exposing (SnackbarStyle)
 
 
@@ -253,7 +253,7 @@ textGray =
 ![containedButton](https://orasund.github.io/elm-ui-widgets/assets/material/containedButton.png)
 
 -}
-containedButton : ButtonStyle context Theme msg
+containedButton : ButtonStyle (Context context) msg
 containedButton =
     Button.containedButton
 
@@ -263,7 +263,7 @@ containedButton =
 ![outlinedButton](https://orasund.github.io/elm-ui-widgets/assets/material/outlinedButton.png)
 
 -}
-outlinedButton : ButtonStyle context Theme msg
+outlinedButton : ButtonStyle (Context context) msg
 outlinedButton =
     Button.outlinedButton
 
@@ -273,7 +273,7 @@ outlinedButton =
 ![textButton](https://orasund.github.io/elm-ui-widgets/assets/material/textButton.png)
 
 -}
-textButton : ButtonStyle context Theme msg
+textButton : ButtonStyle (Context context) msg
 textButton =
     Button.textButton
 
@@ -291,7 +291,7 @@ Technical Remark:
     I noticed the gray version was used more often, so i went with that one.
 
 -}
-toggleButton : ButtonStyle context Theme msg
+toggleButton : ButtonStyle (Context context) msg
 toggleButton =
     Button.toggleButton
 
@@ -305,7 +305,7 @@ Technical Remark:
   - Could not find any specification details
 
 -}
-iconButton : ButtonStyle context Theme msg
+iconButton : ButtonStyle (Context context) msg
 iconButton =
     Button.iconButton
 
@@ -325,7 +325,7 @@ Technical Remark:
   - The specification states that the disabled switch should have a color dependend on its activness. This is not implemented.
 
 -}
-switch : SwitchStyle context Theme msg
+switch : SwitchStyle (Context context) msg
 switch =
     Switch.switch
 
@@ -354,7 +354,7 @@ Technical Remark:
     Please open a new issue or a PR if you want to have it implemented.
 
 -}
-chip : ButtonStyle context Theme msg
+chip : ButtonStyle (Context context) msg
 chip =
     Chip.chip
 
@@ -372,11 +372,10 @@ chip =
 -}
 menuBar :
     AppBarStyle
-        { menuIcon : Icon context Theme msg
-        , title : List (Attribute context Theme msg)
+        { menuIcon : Icon (Context context) msg
+        , title : List (Attribute (Context context) msg)
         }
-        context
-        Palette
+        (Context context)
         msg
 menuBar =
     AppBar.menuBar
@@ -389,11 +388,10 @@ menuBar =
 -}
 tabBar :
     AppBarStyle
-        { menuTabButton : ButtonStyle context Theme msg
-        , title : List (Attribute context Theme msg)
+        { menuTabButton : ButtonStyle (Context context) msg
+        , title : List (Attribute (Context context) msg)
         }
-        context
-        Theme
+        (Context context)
         msg
 tabBar =
     AppBar.tabBar
@@ -407,14 +405,14 @@ tabBar =
 
 {-| A simple styling for a row.
 -}
-row : RowStyle context Theme msg
+row : RowStyle (Context context) msg
 row =
     List.row
 
 
 {-| A simple styling for a column.
 -}
-column : ColumnStyle context Theme msg
+column : ColumnStyle (Context context) msg
 column =
     List.column
 
@@ -424,7 +422,7 @@ column =
 ![sideSheet](https://orasund.github.io/elm-ui-widgets/assets/material/sideSheet.png)
 
 -}
-sideSheet : ColumnStyle context Theme msg
+sideSheet : ColumnStyle (Context context) msg
 sideSheet =
     List.sideSheet
 
@@ -432,7 +430,7 @@ sideSheet =
 {-| A bottom sheet. Has a maximal width of 360.
 Should be align to the bottom right corner of the screen.
 -}
-bottomSheet : ColumnStyle context Theme msg
+bottomSheet : ColumnStyle (Context context) msg
 bottomSheet =
     List.bottomSheet
 
@@ -448,7 +446,7 @@ bottomSheet =
 ![fullBleedDivider](https://orasund.github.io/elm-ui-widgets/assets/material/fullBleedDivider.png)
 
 -}
-fullBleedDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+fullBleedDivider : ItemStyle (DividerStyle (Context context) msg) (Context context) msg
 fullBleedDivider =
     Item.fullBleedDivider
 
@@ -458,7 +456,7 @@ fullBleedDivider =
 ![insetDivider](https://orasund.github.io/elm-ui-widgets/assets/material/insetDivider.png)
 
 -}
-insetDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+insetDivider : ItemStyle (DividerStyle (Context context) msg) (Context context) msg
 insetDivider =
     Item.insetDivider
 
@@ -468,7 +466,7 @@ insetDivider =
 ![middleDivider](https://orasund.github.io/elm-ui-widgets/assets/material/middleDivider.png)
 
 -}
-middleDivider : ItemStyle (DividerStyle context Theme msg) context Theme msg
+middleDivider : ItemStyle (DividerStyle (Context context) msg) (Context context) msg
 middleDivider =
     Item.middleDivider
 
@@ -478,7 +476,7 @@ middleDivider =
 ![insetHeader](https://orasund.github.io/elm-ui-widgets/assets/material/insetHeader.png)
 
 -}
-insetHeader : ItemStyle (HeaderStyle context Theme msg) context Theme msg
+insetHeader : ItemStyle (HeaderStyle (Context context) msg) (Context context) msg
 insetHeader =
     Item.insetHeader
 
@@ -488,7 +486,7 @@ insetHeader =
 ![fullBleedHeader](https://orasund.github.io/elm-ui-widgets/assets/material/fullBleedHeader.png)
 
 -}
-fullBleedHeader : ItemStyle (HeaderStyle context Theme msg) context Theme msg
+fullBleedHeader : ItemStyle (HeaderStyle (Context context) msg) (Context context) msg
 fullBleedHeader =
     Item.fullBleedHeader
 
@@ -502,7 +500,7 @@ Technical Remarks:
   - The Icons are taken from [danmarcab/material-icons](https://dark.elm.dmy.fr/packages/danmarcab/material-icons/latest/).
 
 -}
-expansionItem : ExpansionItemStyle context Theme msg
+expansionItem : ExpansionItemStyle (Context context) msg
 expansionItem =
     Item.expansionItem
 
@@ -512,7 +510,7 @@ expansionItem =
 Use Material.toggleRow instead
 
 -}
-buttonRow : RowStyle context Theme msg
+buttonRow : RowStyle (Context context) msg
 buttonRow =
     List.toggleRow
 
@@ -524,7 +522,7 @@ Only use in combination with `toggleButton`
 ![buttonRow](https://orasund.github.io/elm-ui-widgets/assets/material/buttonRow.png)
 
 -}
-toggleRow : RowStyle context Theme msg
+toggleRow : RowStyle (Context context) msg
 toggleRow =
     List.toggleRow
 
@@ -539,7 +537,7 @@ This is a simplification of the [Material Design Card
 ](https://material.io/components/cards) and might get replaced at a later date.
 
 -}
-cardColumn : ColumnStyle context Theme msg
+cardColumn : ColumnStyle (Context context) msg
 cardColumn =
     List.cardColumn
 
@@ -549,7 +547,7 @@ cardColumn =
 ![fullBleedItem](https://orasund.github.io/elm-ui-widgets/assets/material/fullBleedItem.png)
 
 -}
-fullBleedItem : ItemStyle (FullBleedItemStyle context Theme msg) context Theme msg
+fullBleedItem : ItemStyle (FullBleedItemStyle (Context context) msg) (Context context) msg
 fullBleedItem =
     Item.fullBleedItem
 
@@ -559,7 +557,7 @@ fullBleedItem =
 ![insetItem](https://orasund.github.io/elm-ui-widgets/assets/material/insetItem.png)
 
 -}
-insetItem : ItemStyle (InsetItemStyle context Theme msg) context Theme msg
+insetItem : ItemStyle (InsetItemStyle (Context context) msg) (Context context) msg
 insetItem =
     Item.insetItem
 
@@ -569,7 +567,7 @@ insetItem =
 ![multiLineItem](https://orasund.github.io/elm-ui-widgets/assets/material/multiLineItem.png)
 
 -}
-multiLineItem : ItemStyle (MultiLineItemStyle context Theme msg) context Theme msg
+multiLineItem : ItemStyle (MultiLineItemStyle (Context context) msg) (Context context) msg
 multiLineItem =
     Item.multiLineItem
 
@@ -581,7 +579,7 @@ If the image is bigger then 40x40, the size of the item will change.
 ![imageItem](https://orasund.github.io/elm-ui-widgets/assets/material/imageItem.png)
 
 -}
-imageItem : ItemStyle (ImageItemStyle context Theme msg) context Theme msg
+imageItem : ItemStyle (ImageItemStyle (Context context) msg) (Context context) msg
 imageItem =
     Item.imageItem
 
@@ -591,7 +589,7 @@ imageItem =
 ![selectItem](https://orasund.github.io/elm-ui-widgets/assets/material/selectItem.png)
 
 -}
-selectItem : ItemStyle (ButtonStyle context Theme msg) context Theme msg
+selectItem : ItemStyle (ButtonStyle (Context context) msg) (Context context) msg
 selectItem =
     Item.selectItem
 
@@ -607,7 +605,7 @@ selectItem =
 ![alertDialog](https://orasund.github.io/elm-ui-widgets/assets/material/alertDialog.png)
 
 -}
-alertDialog : DialogStyle context Theme msg
+alertDialog : DialogStyle (Context context) msg
 alertDialog =
     Dialog.alertDialog
 
@@ -623,7 +621,7 @@ alertDialog =
 ![progressIndicator](https://orasund.github.io/elm-ui-widgets/assets/material/progressIndicator.png)
 
 -}
-progressIndicator : ProgressIndicatorStyle context Theme msg
+progressIndicator : ProgressIndicatorStyle (Context context) msg
 progressIndicator =
     ProgressIndicator.progressIndicator
 
@@ -639,7 +637,7 @@ progressIndicator =
 ![sortTable](https://orasund.github.io/elm-ui-widgets/assets/material/sortTable.png)
 
 -}
-sortTable : SortTableStyle context Theme msg
+sortTable : SortTableStyle (Context context) msg
 sortTable =
     SortTable.sortTable
 
@@ -660,7 +658,7 @@ Technical Remark:
     adujsts the luminance of the color to fit the [w3 accessability standard](https://www.w3.org/TR/WCAG20/#Contrast)
 
 -}
-snackbar : SnackbarStyle context Theme msg
+snackbar : SnackbarStyle (Context context) msg
 snackbar =
     Snackbar.snackbar
 
@@ -680,14 +678,14 @@ Technical Remark:
   - This is just a temporary implementation. It will soon be replaced with the official implementation.
 
 -}
-textInput : TextInputStyle context Theme msg
+textInput : TextInputStyle (Context context) msg
 textInput =
     TextInput.textInput
 
 
 {-| A text input style for the password Input.
 -}
-passwordInput : PasswordInputStyle context Theme msg
+passwordInput : PasswordInputStyle (Context context) msg
 passwordInput =
     PasswordInput.passwordInput
 
@@ -709,7 +707,7 @@ Technical Remark:
     So here the background color is also not set.
 
 -}
-tabButton : ButtonStyle context Theme msg
+tabButton : ButtonStyle (Context context) msg
 tabButton =
     Tab.tabButton
 
@@ -719,6 +717,6 @@ tabButton =
 ![tab](https://orasund.github.io/elm-ui-widgets/assets/material/tab.png)
 
 -}
-tab : TabStyle context Theme msg
+tab : TabStyle (Context context) msg
 tab =
     Tab.tab
