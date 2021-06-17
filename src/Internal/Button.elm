@@ -17,9 +17,9 @@ type alias ButtonStyle context theme msg =
         , content :
             { text : { contentText : List (Attribute context theme msg) }
             , icon :
-                { ifDisabled : IconStyle theme
-                , ifActive : IconStyle theme
-                , otherwise : IconStyle theme
+                { ifDisabled : IconStyle context theme
+                , ifActive : IconStyle context theme
+                , otherwise : IconStyle context theme
                 }
             }
         }

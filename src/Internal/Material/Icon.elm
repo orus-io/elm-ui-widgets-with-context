@@ -2,20 +2,20 @@ module Internal.Material.Icon exposing (expand_less, expand_more, icon, menu, mo
 
 import Color exposing (Color)
 import Element.WithContext as Element
-import Internal.Context exposing (Element)
+import Internal.Context exposing (Context, Element)
 import Svg exposing (Svg)
 import Svg.Attributes
 import Widget.Icon exposing (Icon)
 
 
-icon : { viewBox : String, size : Int, color : theme -> Color } -> List (Svg msg) -> Element context theme msg
+icon : { viewBox : String, size : Int, color : Context context theme -> Color } -> List (Svg msg) -> Element context theme msg
 icon { viewBox, size, color } svgElements =
     Element.with
-        (\{ theme } ->
+        (\context ->
             Svg.svg
                 [ Svg.Attributes.height <| String.fromInt size
-                , Svg.Attributes.stroke <| Color.toCssString <| color theme
-                , Svg.Attributes.fill <| Color.toCssString <| color theme
+                , Svg.Attributes.stroke <| Color.toCssString <| color context
+                , Svg.Attributes.fill <| Color.toCssString <| color context
 
                 --, Svg.Attributes.strokeLinecap "round"
                 --, Svg.Attributes.strokeLinejoin "round"

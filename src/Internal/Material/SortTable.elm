@@ -1,14 +1,14 @@
 module Internal.Material.SortTable exposing (sortTable)
 
 import Element.WithContext as Element
-import Internal.Context exposing (Context)
 import Internal.Material.Button as Button
 import Internal.Material.Icon as Icon
 import Internal.Material.Palette exposing (Palette)
 import Internal.SortTable exposing (SortTableStyle)
+import Widget.Material.Context exposing (Theme)
 
 
-sortTable : SortTableStyle context Palette msg
+sortTable : SortTableStyle context (Theme theme) msg
 sortTable =
     { elementTable = []
     , content =

@@ -8,17 +8,17 @@ import Internal.AppBar exposing (AppBarStyle)
 import Internal.Button exposing (ButtonStyle)
 import Internal.Context exposing (Attribute)
 import Internal.Material.Button as Button
-import Widget.Material.Context exposing (..)
 import Internal.Material.Icon as Icon
 import Internal.Material.Palette as Palette exposing (Palette)
 import Internal.Material.TextInput as TextInput
 import Widget.Customize as Customize
 import Widget.Icon as Icon exposing (Icon)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 import Widget.Material.Typography as Typography
 
 
-menuTabButton : ButtonStyle context Theme msg
+menuTabButton : ButtonStyle context (Theme theme) msg
 menuTabButton =
     { elementButton =
         Typography.button
@@ -88,15 +88,15 @@ menuTabButton =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = .primary >> MaterialColor.accessibleTextColor
+                    , color = getPrimaryColor >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = .primary >> MaterialColor.accessibleTextColor
+                    , color = getPrimaryColor >> MaterialColor.accessibleTextColor
                     }
                 }
             }
@@ -106,11 +106,11 @@ menuTabButton =
 
 menuBar :
     AppBarStyle
-        { menuIcon : Icon context Theme msg
-        , title : List (Attribute context Theme msg)
+        { menuIcon : Icon context (Theme theme) msg
+        , title : List (Attribute context (Theme theme) msg)
         }
         context
-        Theme
+        (Theme theme)
         msg
 menuBar =
     internalBar
@@ -121,11 +121,11 @@ menuBar =
 
 tabBar :
     AppBarStyle
-        { menuTabButton : ButtonStyle context Theme msg
-        , title : List (Attribute context Theme msg)
+        { menuTabButton : ButtonStyle context (Theme theme) msg
+        , title : List (Attribute context (Theme theme) msg)
         }
         context
-        Theme
+        (Theme theme)
         msg
 tabBar =
     internalBar
@@ -134,7 +134,7 @@ tabBar =
         }
 
 
-internalBar : content -> AppBarStyle content context Theme msg
+internalBar : content -> AppBarStyle content context (Theme theme) msg
 internalBar content =
     { elementRow =
         (getPrimaryColor
@@ -170,7 +170,7 @@ internalBar content =
                                             { ifActive =
                                                 { size = record.icon.ifActive.size
                                                 , color =
-                                                    .primary
+                                                    getPrimaryColor
                                                         >> MaterialColor.accessibleTextColor
                                                 }
                                             , ifDisabled =
@@ -178,7 +178,7 @@ internalBar content =
                                             , otherwise =
                                                 { size = record.icon.otherwise.size
                                                 , color =
-                                                    .primary
+                                                    getPrimaryColor
                                                         >> MaterialColor.accessibleTextColor
                                                 }
                                             }

@@ -1,29 +1,34 @@
 module Widget.Material.Context exposing (..)
 
 import Element.WithContext as Element
-import Internal.Context exposing (Context)
+import Internal.Context
 import Internal.Material.Palette exposing (Palette)
 
 
-type alias Theme =
-    Palette
+type alias Context context theme =
+    Internal.Context.Context context (Theme theme)
 
 
-wrap : (Palette -> style) -> Context context Palette -> style
-wrap fn { theme } =
-    fn theme
+type alias Theme theme =
+    { theme
+        | material : Palette
+    }
 
 
-withPalette fun =
+withTheme fun =
     Element.with (\{ theme } -> fun theme)
 
 
+withPalette fun =
+    withTheme (.material >> fun)
+
+
 withPaletteDecoration fun =
-    Element.withDecoration (\{ theme } -> fun theme)
+    Element.withDecoration (\{ theme } -> fun theme.material)
 
 
 withPaletteAttribute fun =
-    Element.withAttribute (\{ theme } -> fun theme)
+    Element.withAttribute (\{ theme } -> fun theme.material)
 
 
 withPrimaryDecoration fun =
@@ -58,10 +63,6 @@ withOnSurfaceAttribute fun =
     withPaletteAttribute (.on >> .surface >> fun)
 
 
-getBackground =
-    .background
-
-
 withBackground fun =
     withPalette (.background >> fun)
 
@@ -86,9 +87,17 @@ withOnBackgroundDecoration fun =
     withPaletteDecoration (.on >> .background >> fun)
 
 
+getBackground =
+    .theme >> .material >> .background
+
+
 getPrimaryColor =
-    .theme >> .primary
+    .theme >> .material >> .primary
 
 
 getSurfaceColor =
-    .theme >> .surface
+    .theme >> .material >> .surface
+
+
+getPalette =
+    .theme >> .material

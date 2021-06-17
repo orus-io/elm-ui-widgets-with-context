@@ -6,13 +6,13 @@ import Element.WithContext.Border as Border
 import Element.WithContext.Font as Font
 import Html.Attributes as Attributes
 import Internal.Button exposing (ButtonStyle)
-import Widget.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 import Widget.Material.Typography as Typography
 
 
-baseButton : ButtonStyle context Palette msg
+baseButton : ButtonStyle context (Theme theme) msg
 baseButton =
     { elementButton =
         Typography.button
@@ -36,15 +36,15 @@ baseButton =
             , icon =
                 { ifDisabled =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , ifActive =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 }
             }
@@ -54,36 +54,36 @@ baseButton =
 
 {-| A contained button representing the most important action of a group.
 -}
-containedButton : ButtonStyle context Palette msg
+containedButton : ButtonStyle context (Theme theme) msg
 containedButton =
     { elementButton =
         (baseButton |> .elementButton)
             ++ [ Border.shadow <| MaterialColor.shadow 2
                , Element.mouseDown <|
-                    [ Element.withDecoration
-                        (\{ theme } ->
-                            theme.primary
-                                |> MaterialColor.withShade theme.on.primary MaterialColor.buttonPressedOpacity
+                    [ withPaletteDecoration
+                        (\palette ->
+                            palette.primary
+                                |> MaterialColor.withShade palette.on.primary MaterialColor.buttonPressedOpacity
                                 |> MaterialColor.fromColor
                         )
                         Background.color
                     , Border.shadow <| MaterialColor.shadow 12
                     ]
                , Element.focused <|
-                    [ Element.withDecoration
-                        (\{ theme } ->
-                            theme.primary
-                                |> MaterialColor.withShade theme.on.primary MaterialColor.buttonFocusOpacity
+                    [ withPaletteDecoration
+                        (\palette ->
+                            palette.primary
+                                |> MaterialColor.withShade palette.on.primary MaterialColor.buttonFocusOpacity
                                 |> MaterialColor.fromColor
                         )
                         Background.color
                     , Border.shadow <| MaterialColor.shadow 6
                     ]
                , Element.mouseOver <|
-                    [ Element.withDecoration
-                        (\{ theme } ->
-                            theme.primary
-                                |> MaterialColor.withShade theme.on.primary MaterialColor.buttonHoverOpacity
+                    [ withPaletteDecoration
+                        (\palette ->
+                            palette.primary
+                                |> MaterialColor.withShade palette.on.primary MaterialColor.buttonHoverOpacity
                                 |> MaterialColor.fromColor
                         )
                         Background.color
@@ -140,18 +140,19 @@ containedButton =
                 { ifActive =
                     { size = 18
                     , color =
-                        .primary
+                        getPrimaryColor
                             >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 18
                     , color =
-                        Palette.gray
+                        getPalette
+                            >> Palette.gray
                     }
                 , otherwise =
                     { size = 18
                     , color =
-                        .primary
+                        getPrimaryColor
                             >> MaterialColor.accessibleTextColor
                     }
                 }
@@ -162,50 +163,41 @@ containedButton =
 
 {-| A outlined button representing an important action within a group.
 -}
-outlinedButton : ButtonStyle context Palette msg
+outlinedButton : ButtonStyle context (Theme theme) msg
 outlinedButton =
     { elementButton =
         (baseButton |> .elementButton)
             ++ [ Border.width <| 1
                , Font.color
-                    |> Element.withAttribute
-                        (\{ theme } ->
-                            theme.primary
-                                |> MaterialColor.fromColor
-                        )
+                    |> withPrimaryAttribute
+                        MaterialColor.fromColor
                , Border.color
-                    |> Element.withAttribute
-                        (\{ theme } ->
-                            theme.on.surface
+                    |> withPaletteAttribute
+                        (\palette ->
+                            palette.on.surface
                                 |> MaterialColor.scaleOpacity 0.14
-                                |> MaterialColor.withShade theme.primary MaterialColor.buttonHoverOpacity
+                                |> MaterialColor.withShade palette.primary MaterialColor.buttonHoverOpacity
                                 |> MaterialColor.fromColor
                         )
                , Element.mouseDown
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                , Element.focused
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                , Element.mouseOver
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                ]
@@ -248,15 +240,15 @@ outlinedButton =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 }
             }
@@ -266,7 +258,7 @@ outlinedButton =
 
 {-| A text button representing a simple action within a group.
 -}
-textButton : ButtonStyle context Palette msg
+textButton : ButtonStyle context (Theme theme) msg
 textButton =
     { elementButton =
         (baseButton |> .elementButton)
@@ -275,29 +267,23 @@ textButton =
                         MaterialColor.fromColor
                , Element.mouseDown
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonPressedOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                , Element.focused
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonFocusOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                , Element.mouseOver
                     [ Background.color
-                        |> Element.withDecoration
-                            (\{ theme } ->
-                                theme.primary
-                                    |> MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
-                                    |> MaterialColor.fromColor
+                        |> withPrimaryDecoration
+                            (MaterialColor.scaleOpacity MaterialColor.buttonHoverOpacity
+                                >> MaterialColor.fromColor
                             )
                     ]
                ]
@@ -328,15 +314,15 @@ textButton =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 }
             }
@@ -355,7 +341,7 @@ Technical Remark:
     I noticed the gray version was used more often, so i went with that one.
 
 -}
-toggleButton : ButtonStyle context Palette msg
+toggleButton : ButtonStyle context (Theme theme) msg
 toggleButton =
     { elementButton =
         Typography.button
@@ -464,8 +450,8 @@ toggleButton =
             , Element.focused <|
                 MaterialColor.textAndBackgroundDecoration
                     (\{ theme } ->
-                        theme.surface
-                            |> MaterialColor.withShade theme.on.surface MaterialColor.buttonFocusOpacity
+                        theme.material.surface
+                            |> MaterialColor.withShade theme.material.on.surface MaterialColor.buttonFocusOpacity
                     )
             ]
         , content =
@@ -474,17 +460,17 @@ toggleButton =
                 { ifActive =
                     { size = 24
                     , color =
-                        .surface
+                        getSurfaceColor
                             >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 24
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , otherwise =
                     { size = 24
                     , color =
-                        .surface
+                        getSurfaceColor
                             >> MaterialColor.accessibleTextColor
                     }
                 }
@@ -500,7 +486,7 @@ Technical Remark:
   - Could not find any specification details
 
 -}
-iconButton : ButtonStyle context Palette msg
+iconButton : ButtonStyle context (Theme theme) msg
 iconButton =
     { elementButton =
         (baseButton |> .elementButton)
@@ -561,15 +547,15 @@ iconButton =
             , icon =
                 { ifActive =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 , ifDisabled =
                     { size = 18
-                    , color = Palette.gray
+                    , color = getPalette >> Palette.gray
                     }
                 , otherwise =
                     { size = 18
-                    , color = .primary
+                    , color = getPrimaryColor
                     }
                 }
             }

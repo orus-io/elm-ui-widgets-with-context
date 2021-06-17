@@ -12,7 +12,7 @@ import Widget.Material.Color as MaterialColor
 import Widget.Material.Typography as Typography
 
 
-alertDialog : DialogStyle context Theme msg
+alertDialog : DialogStyle context (Theme theme) msg
 alertDialog =
     { elementColumn =
         [ Border.rounded 4

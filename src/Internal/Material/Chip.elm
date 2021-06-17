@@ -7,12 +7,12 @@ import Element.WithContext.Font as Font
 import Internal.Button exposing (ButtonStyle)
 import Internal.Context exposing (Context)
 import Internal.Material.Button as Button
-import Widget.Material.Context exposing (..)
 import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
+import Widget.Material.Context exposing (..)
 
 
-chip : ButtonStyle context Theme msg
+chip : ButtonStyle context (Theme theme) msg
 chip =
     { elementButton =
         [ Element.height <| Element.px 32
@@ -55,8 +55,8 @@ chip =
         (Button.baseButton |> .ifDisabled)
             ++ MaterialColor.textAndBackground
                 (\{ theme } ->
-                    Palette.lightGray theme
-                        |> MaterialColor.withShade theme.on.surface MaterialColor.buttonDisabledOpacity
+                    Palette.lightGray theme.material
+                        |> MaterialColor.withShade theme.material.on.surface MaterialColor.buttonDisabledOpacity
                 )
             ++ [ Element.mouseDown []
                , Element.mouseOver []
@@ -111,19 +111,22 @@ chip =
                 { ifActive =
                     { size = 18
                     , color =
-                        Palette.lightGray
+                        getPalette
+                            >> Palette.lightGray
                             >> MaterialColor.accessibleTextColor
                     }
                 , ifDisabled =
                     { size = 18
                     , color =
-                        Palette.lightGray
+                        getPalette
+                            >> Palette.lightGray
                             >> MaterialColor.accessibleTextColor
                     }
                 , otherwise =
                     { size = 18
                     , color =
-                        Palette.lightGray
+                        getPalette
+                            >> Palette.lightGray
                             >> MaterialColor.accessibleTextColor
                     }
                 }

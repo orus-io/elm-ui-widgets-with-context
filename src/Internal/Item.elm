@@ -59,7 +59,7 @@ type alias FullBleedItemStyle context theme msg =
         { elementRow : List (Attribute context theme msg)
         , content :
             { text : { elementText : List (Attribute context theme msg) }
-            , icon : IconStyle theme
+            , icon : IconStyle context theme
             }
         }
     }
@@ -75,9 +75,9 @@ type alias InsetItemStyle context theme msg =
             { text : { elementText : List (Attribute context theme msg) }
             , icon :
                 { element : List (Attribute context theme msg)
-                , content : IconStyle theme
+                , content : IconStyle context theme
                 }
-            , content : IconStyle theme
+            , content : IconStyle context theme
             }
         }
     }
@@ -99,9 +99,9 @@ type alias MultiLineItemStyle context theme msg =
                 }
             , icon :
                 { element : List (Attribute context theme msg)
-                , content : IconStyle theme
+                , content : IconStyle context theme
                 }
-            , content : IconStyle theme
+            , content : IconStyle context theme
             }
         }
     }
@@ -116,7 +116,7 @@ type alias ImageItemStyle context theme msg =
         , content :
             { text : { elementText : List (Attribute context theme msg) }
             , image : { element : List (Attribute context theme msg) }
-            , content : IconStyle theme
+            , content : IconStyle context theme
             }
         }
     }

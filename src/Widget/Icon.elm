@@ -22,16 +22,16 @@ import Svg.Attributes
 
 
 {-| -}
-type alias IconStyle theme =
+type alias IconStyle context theme =
     { size : Int
-    , color : theme -> Color
+    , color : Context context theme -> Color
     }
 
 
 {-| -}
 type alias Icon context theme msg =
     { size : Int
-    , color : theme -> Color
+    , color : Context context theme -> Color
     }
     -> Element context theme msg
 
@@ -40,8 +40,8 @@ withIconStyle : ({ size : Int, color : Color } -> Element context theme msg) -> 
 withIconStyle fun =
     \{ size, color } ->
         Element.with
-            (\{ theme } ->
-                fun { size = size, color = color theme }
+            (\context ->
+                fun { size = size, color = color context }
             )
             identity
 

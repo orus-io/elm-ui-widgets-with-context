@@ -18,7 +18,7 @@ import Internal.Material.Palette as Palette exposing (Palette)
 import Widget.Material.Color as MaterialColor
 
 
-row : RowStyle context Theme msg
+row : RowStyle context (Theme theme) msg
 row =
     { elementRow =
         [ Element.paddingXY 0 8
@@ -34,7 +34,7 @@ row =
     }
 
 
-column : ColumnStyle context Theme msg
+column : ColumnStyle context (Theme theme) msg
 column =
     { elementColumn =
         [ Element.paddingXY 0 8
@@ -50,7 +50,7 @@ column =
     }
 
 
-toggleRow : RowStyle context Theme msg
+toggleRow : RowStyle context (Theme theme) msg
 toggleRow =
     { elementRow = []
     , content =
@@ -81,7 +81,7 @@ toggleRow =
     }
 
 
-cardColumn : ColumnStyle context Theme msg
+cardColumn : ColumnStyle context (Theme theme) msg
 cardColumn =
     { elementColumn =
         [ Element.width <| Element.fill
@@ -144,7 +144,7 @@ cardColumn =
     }
 
 
-sideSheet : ColumnStyle context Theme msg
+sideSheet : ColumnStyle context (Theme theme) msg
 sideSheet =
     { elementColumn =
         (getSurfaceColor |> MaterialColor.textAndBackground)
@@ -174,7 +174,7 @@ sideSheet =
     }
 
 
-bottomSheet : ColumnStyle context Theme msg
+bottomSheet : ColumnStyle context (Theme theme) msg
 bottomSheet =
     { elementColumn =
         (getSurfaceColor |> MaterialColor.textAndBackground)

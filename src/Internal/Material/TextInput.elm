@@ -11,7 +11,7 @@ import Widget.Customize as Customize
 import Widget.Material.Color as MaterialColor
 
 
-textInput : TextInputStyle context Theme msg
+textInput : TextInputStyle context (Theme theme) msg
 textInput =
     { elementRow =
         (getSurfaceColor
@@ -55,7 +55,7 @@ textInput =
     }
 
 
-searchInput : TextInputStyle context Theme msg
+searchInput : TextInputStyle context (Theme theme) msg
 searchInput =
     textInputBase
         |> Customize.mapElementRow
@@ -80,7 +80,7 @@ searchInput =
             )
 
 
-textInputBase : TextInputStyle context Theme msg
+textInputBase : TextInputStyle context (Theme theme) msg
 textInputBase =
     { elementRow =
         getSurfaceColor

@@ -3,14 +3,14 @@ module Internal.Material.ProgressIndicator exposing (determinateCircularIcon, in
 import Color
 import Element.WithContext as Element
 import Internal.Context exposing (Attribute, Element)
-import Widget.Material.Context exposing (..)
 import Internal.Material.Palette exposing (Palette)
 import Internal.ProgressIndicator exposing (ProgressIndicatorStyle)
 import Svg
 import Svg.Attributes
+import Widget.Material.Context exposing (..)
 
 
-indeterminateCircularIcon : (Palette -> Color.Color) -> List (Attribute context Theme msg) -> Element context Theme msg
+indeterminateCircularIcon : (Palette -> Color.Color) -> List (Attribute context (Theme theme) msg) -> Element context (Theme theme) msg
 indeterminateCircularIcon color attribs =
     -- Based on example at https://codepen.io/FezVrasta/pen/oXrgdR
     withPalette
@@ -70,7 +70,7 @@ indeterminateCircularIcon color attribs =
         (Element.el attribs)
 
 
-determinateCircularIcon : (Palette -> Color.Color) -> List (Attribute context Theme msg) -> Float -> Element context Theme msg
+determinateCircularIcon : (Palette -> Color.Color) -> List (Attribute context (Theme theme) msg) -> Float -> Element context (Theme theme) msg
 determinateCircularIcon color attribs progress =
     -- With help from https://css-tricks.com/building-progress-ring-quickly/
     let
@@ -115,7 +115,7 @@ determinateCircularIcon color attribs progress =
 
 {-| A circular progress indicator
 -}
-progressIndicator : ProgressIndicatorStyle context Theme msg
+progressIndicator : ProgressIndicatorStyle context (Theme theme) msg
 progressIndicator =
     { elementFunction =
         \maybeProgress ->

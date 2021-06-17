@@ -23,7 +23,7 @@ module Widget exposing
     , PasswordInputStyle, PasswordInput, newPasswordInput, currentPasswordInput
     , TabStyle, Tab, tab
     , ProgressIndicatorStyle, ProgressIndicator, circularProgressIndicator
-    , Attribute, Element, Label, Placeholder
+    , Attribute, Context, Element, Label, Placeholder
     )
 
 {-| This module contains different stateless view functions. No wiring required.
@@ -204,15 +204,15 @@ type alias Label context theme msg =
 
 
 {-| -}
-type alias IconStyle theme =
+type alias IconStyle context theme =
     { size : Int
-    , color : theme -> Color
+    , color : Context context theme -> Color
     }
 
 
 type alias Icon context theme msg =
     { size : Int
-    , color : theme -> Color
+    , color : Context context theme -> Color
     }
     -> Element context theme msg
 
@@ -234,9 +234,9 @@ type alias ButtonStyle context theme msg =
         , content :
             { text : { contentText : List (Attribute context theme msg) }
             , icon :
-                { ifDisabled : IconStyle theme
-                , ifActive : IconStyle theme
-                , otherwise : IconStyle theme
+                { ifDisabled : IconStyle context theme
+                , ifActive : IconStyle context theme
+                , otherwise : IconStyle context theme
                 }
             }
         }
@@ -952,7 +952,7 @@ type alias FullBleedItemStyle context theme msg =
         { elementRow : List (Attribute context theme msg)
         , content :
             { text : { elementText : List (Attribute context theme msg) }
-            , icon : IconStyle theme
+            , icon : IconStyle context theme
             }
         }
     }
@@ -969,9 +969,9 @@ type alias InsetItemStyle context theme msg =
             { text : { elementText : List (Attribute context theme msg) }
             , icon :
                 { element : List (Attribute context theme msg)
-                , content : IconStyle theme
+                , content : IconStyle context theme
                 }
-            , content : IconStyle theme
+            , content : IconStyle context theme
             }
         }
     }
@@ -994,9 +994,9 @@ type alias MultiLineItemStyle context theme msg =
                 }
             , icon :
                 { element : List (Attribute context theme msg)
-                , content : IconStyle theme
+                , content : IconStyle context theme
                 }
-            , content : IconStyle theme
+            , content : IconStyle context theme
             }
         }
     }
@@ -1012,7 +1012,7 @@ type alias ImageItemStyle context theme msg =
         , content :
             { text : { elementText : List (Attribute context theme msg) }
             , image : { element : List (Attribute context theme msg) }
-            , content : IconStyle theme
+            , content : IconStyle context theme
             }
         }
     }
